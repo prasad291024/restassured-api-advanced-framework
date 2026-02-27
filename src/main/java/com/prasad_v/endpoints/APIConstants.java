@@ -1,27 +1,15 @@
-package com.prasad_v.endpoints; // Package declaration - Organizes the class under a specific namespace.
+package com.prasad_v.endpoints;
 
-public class APIConstants { // Class declaration for storing API-related constants.
-
-    // Base URL of the RESTful web service
-    public static String BASE_URL = "https://restful-booker.herokuapp.com";
-    // public static String BASE_URL = // In future, we can fetch this from Excel file if needed
-
-
-    // In the future, instead of hardcoding, we may fetch the BASE_URL from an external Excel file.
-    // Example:
-    // public static String BASE_URL = ExcelReader.getCellValue("Config.xlsx", "Sheet1", "BaseURL");
-
-    // API Endpoint for Creating, Updating, and Deleting Bookings
-    // Used in API calls where we manage user bookings.
-    public static String CREATE_UPDATE_BOOKING_URL = "/booking";
-
-    // Authentication Endpoint
-    // Used to generate authentication tokens for API requests.
-    public static String AUTH_URL = "/auth";
-
-    // Health Check Endpoint
-    // This endpoint is used to check if the API server is online and functioning correctly.
-    public static String PING_URL = "/ping";
+/**
+ * @deprecated Use com.prasad_v.constants.APIConstants instead
+ * This class is kept for backward compatibility only
+ */
+@Deprecated
+public class APIConstants {
+    public static final String BASE_URL = "https://restful-booker.herokuapp.com";
+    public static final String CREATE_UPDATE_BOOKING_URL = "/booking";
+    public static final String AUTH_URL = "/auth";
+    public static final String PING_URL = "/ping";
 }
 
 /*

@@ -36,3 +36,11 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Security ###
+.env
+*.jks
+*.p12
+*.pem
+*.key
+src/test/resources/security/

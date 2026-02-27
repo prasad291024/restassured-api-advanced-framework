@@ -1,5 +1,9 @@
 package com.prasad_v.config;
 
+import com.prasad_v.exceptions.ConfigurationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +14,7 @@ import java.util.Properties;
  * This class provides functionality to load and retrieve configuration properties
  */
 public class ConfigurationManager {
+    private static final Logger logger = LogManager.getLogger(ConfigurationManager.class);
     private static ConfigurationManager instance;
     private Properties properties;
 
@@ -33,12 +38,16 @@ public class ConfigurationManager {
      * Load properties from a specified file path
      *
      * @param filePath Path to the properties file
-     * @throws IOException If file cannot be read or doesn't exist
+     * @throws ConfigurationException If file cannot be read or doesn't exist
      */
-    public void loadConfig(String filePath) throws IOException {
+    public void loadConfig(String filePath) {
         try (InputStream input = new FileInputStream(filePath)) {
             properties = new Properties();
             properties.load(input);
+            logger.info("Configuration loaded from: {}", filePath);
+        } catch (IOException e) {
+            logger.error("Failed to load configuration from: {}", filePath, e);
+            throw new ConfigurationException("Failed to load configuration from: " + filePath, e);
         }
     }
 
@@ -46,15 +55,19 @@ public class ConfigurationManager {
      * Load properties from classpath resource
      *
      * @param resourcePath Path to the resource file in classpath
-     * @throws IOException If resource cannot be read or doesn't exist
+     * @throws ConfigurationException If resource cannot be read or doesn't exist
      */
-    public void loadConfigFromResource(String resourcePath) throws IOException {
+    public void loadConfigFromResource(String resourcePath) {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
             if (input == null) {
-                throw new IOException("Resource not found: " + resourcePath);
+                throw new ConfigurationException("Resource not found: " + resourcePath);
             }
             properties = new Properties();
             properties.load(input);
+            logger.info("Configuration loaded from resource: {}", resourcePath);
+        } catch (IOException e) {
+            logger.error("Failed to load configuration from resource: {}", resourcePath, e);
+            throw new ConfigurationException("Failed to load configuration from resource: " + resourcePath, e);
         }
     }
 
@@ -65,7 +78,27 @@ public class ConfigurationManager {
      * @return Property value or null if not found
      */
     public String getProperty(String key) {
-        return properties.getProperty(key);
+        String value = properties.getProperty(key);
+        if (value != null && value.startsWith("${") && value.endsWith("}")) {
+            String envKey = value.substring(2, value.length() - 1);
+            return System.getenv(envKey);
+        }
+        return value;
+    }
+
+    /**
+     * Get a required property value (throws exception if not found)
+     *
+     * @param key Property key
+     * @return Property value
+     * @throws ConfigurationException if property is not found
+     */
+    public String getRequiredProperty(String key) {
+        String value = getProperty(key);
+        if (value == null || value.trim().isEmpty()) {
+            throw new ConfigurationException("Required property not found: " + key);
+        }
+        return value;
     }
 
     /**

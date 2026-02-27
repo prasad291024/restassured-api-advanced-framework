@@ -6,6 +6,12 @@ package com.prasad_v.constants;
  */
 public class APIConstants {
 
+    // Restful Booker API Endpoints
+    public static final String BASE_URL = "https://restful-booker.herokuapp.com";
+    public static final String CREATE_UPDATE_BOOKING_URL = "/booking";
+    public static final String AUTH_URL = "/auth";
+    public static final String PING_URL = "/ping";
+
     // HTTP Methods
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";
