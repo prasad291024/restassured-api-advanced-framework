@@ -1,7 +1,5 @@
 package com.prasad_v.config;
 
-import java.io.IOException;
-
 /**
  * Environment manager to handle environment-specific configurations
  * This class loads the appropriate properties file based on the selected environment
@@ -37,13 +35,9 @@ public class EnvironmentManager {
      *
      * @throws IOException If the properties file cannot be loaded
      */
-    public void initializeEnvironment() throws IOException {
+    public void initializeEnvironment() {
         String configFile = CONFIG_PATH + currentEnvironment + ".properties";
-        try {
-            configManager.loadConfigFromResource(configFile);
-        } catch (IOException e) {
-            throw new IOException("Failed to initialize environment '" + currentEnvironment + "': " + e.getMessage(), e);
-        }
+        configManager.loadConfigFromResource(configFile);
     }
 
     /**
@@ -52,7 +46,7 @@ public class EnvironmentManager {
      * @param environment Environment name (e.g., "dev", "qa", "prod")
      * @throws IOException If the properties file cannot be loaded
      */
-    public void setEnvironment(String environment) throws IOException {
+    public void setEnvironment(String environment) {
         this.currentEnvironment = environment;
         initializeEnvironment();
     }
@@ -72,7 +66,11 @@ public class EnvironmentManager {
      * @return Base URL string
      */
     public String getBaseUrl() {
-        return configManager.getProperty("api.baseUrl");
+        String baseUrl = configManager.getProperty("api.base.url");
+        if (baseUrl == null || baseUrl.isBlank()) {
+            baseUrl = configManager.getProperty("api.baseUrl");
+        }
+        return baseUrl;
     }
 
     /**

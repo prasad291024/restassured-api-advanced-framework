@@ -215,7 +215,7 @@ public class UserAPITests extends BaseTest {
 
     @DataProvider(name = "createUserData")
     public Object[][] createUserData() {
-        return dataProvider.getTestData(USER_DATA_FILE, "createUsers");
+        return dataProvider.getTestData(USER_DATA_FILE, "newUsers");
     }
 
     private String getBaseUrl() {

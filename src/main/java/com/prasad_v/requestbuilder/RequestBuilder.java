@@ -7,7 +7,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.prasad_v.config.ConfigurationManager;
-import com.prasad_v.config.EnvironmentManager;
+import com.prasad_v.constants.APIConstants;
 import com.prasad_v.enums.RequestType;
 import com.prasad_v.exceptions.APIException;
 import com.prasad_v.interceptors.RequestResponseInterceptor;
@@ -18,7 +18,6 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.config.LogConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.LogDetail;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -58,9 +57,10 @@ public class RequestBuilder {
 
         // Get base URL from environment
         ConfigurationManager configManager = ConfigurationManager.getInstance();
-        EnvironmentManager envManager = EnvironmentManager.getInstance();
-        String environment = envManager.getCurrentEnvironment();
-        baseUrl = configManager.getConfigProperty(environment + ".baseUrl");
+        baseUrl = configManager.getConfigProperty("api.base.url", "");
+        if (baseUrl.isBlank()) {
+            baseUrl = configManager.getConfigProperty("api.baseUrl", APIConstants.BASE_URL);
+        }
 
         // Default request type
         requestType = RequestType.GET;
@@ -103,6 +103,13 @@ public class RequestBuilder {
     }
 
     /**
+     * Backward-compatible alias for setPath.
+     */
+    public RequestBuilder setBasePath(String path) {
+        return setPath(path);
+    }
+
+    /**
      * Override the base URL
      *
      * @param baseUrl Base URL to use
@@ -112,6 +119,13 @@ public class RequestBuilder {
         this.baseUrl = baseUrl;
         logger.debug("Set base URL: " + baseUrl);
         return this;
+    }
+
+    /**
+     * Backward-compatible alias for setBaseUrl.
+     */
+    public RequestBuilder setBaseURI(String baseUrl) {
+        return setBaseUrl(baseUrl);
     }
 
     /**
@@ -149,6 +163,19 @@ public class RequestBuilder {
         if (params != null) {
             queryParams.putAll(params);
             logger.debug("Added multiple query parameters: " + params.keySet());
+        }
+        return this;
+    }
+
+    /**
+     * Backward-compatible alias accepting non-string query parameter values.
+     */
+    public RequestBuilder setQueryParams(Map<String, Object> params) {
+        if (params != null) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                queryParams.put(entry.getKey(), entry.getValue() == null ? "" : String.valueOf(entry.getValue()));
+            }
+            logger.debug("Set query parameters: " + params.keySet());
         }
         return this;
     }
@@ -218,6 +245,16 @@ public class RequestBuilder {
         headerManager.addContentTypeJson();
         logger.debug("Set JSON request body from string");
         return this;
+    }
+
+    /**
+     * Backward-compatible generic body setter (Map/POJO/JSON string).
+     */
+    public RequestBuilder setBody(Object body) {
+        if (body instanceof String) {
+            return setBody((String) body);
+        }
+        return setBodyAsPojo(body);
     }
 
     /**
@@ -388,6 +425,13 @@ public class RequestBuilder {
     }
 
     /**
+     * Backward-compatible no-op terminal method.
+     */
+    public RequestBuilder build() {
+        return this;
+    }
+
+    /**
      * Build and execute the API request
      *
      * @return RestAssured Response object
@@ -424,6 +468,9 @@ public class RequestBuilder {
             }
 
             // Build full URL
+            if (baseUrl == null || baseUrl.isBlank()) {
+                throw new APIException("Base URL is not set for the request");
+            }
             String url = baseUrl;
             if (path != null && !path.isEmpty()) {
                 if (!url.endsWith("/") && !path.startsWith("/")) {

@@ -60,7 +60,7 @@ public class TestE2EFlow_01 extends BaseTest {
         BookingResponse bookingResponse = payloadManager.bookingResponseJava(response.asString());
 
         // Validating response data
-        assertActions.verifyStringKey(bookingResponse.getBooking().getFirstname(), "Pramod");
+        assertActions.verifyStringKey(bookingResponse.getBooking().getFirstname(), "Prasad");
         assertActions.verifyStringKeyNotNull(bookingResponse.getBookingid());
 
         // Storing the generated booking ID in TestNG context for later use
@@ -100,7 +100,7 @@ public class TestE2EFlow_01 extends BaseTest {
 
         // Validating the retrieved booking details
         assertThat(booking.getFirstname()).isNotNull().isNotBlank();
-        assertThat(booking.getFirstname()).isEqualTo("Pramod");
+        assertThat(booking.getFirstname()).isEqualTo("Prasad");
     }
 
     /**
@@ -141,7 +141,7 @@ public class TestE2EFlow_01 extends BaseTest {
         // Validating updated booking details
         assertThat(booking.getFirstname()).isNotNull().isNotBlank();
         assertThat(booking.getFirstname()).isEqualTo("Lucky");
-        assertThat(booking.getLastname()).isEqualTo("Dutta");
+        assertThat(booking.getLastname()).isEqualTo("Charming");
     }
 
     /**

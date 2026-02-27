@@ -41,6 +41,35 @@ public class AuthenticationFactory {
     }
 
     /**
+     * Backward-compatible resolver that accepts string auth type names.
+     *
+     * @param authType Authentication type as string (e.g. "oauth", "basic")
+     * @return Matching auth handler, or NoAuthHandler for unknown values
+     */
+    public static IAuthHandler getAuthHandler(String authType) {
+        if (authType == null || authType.trim().isEmpty()) {
+            return getAuthHandler(AuthType.NO_AUTH);
+        }
+
+        switch (authType.trim().toLowerCase()) {
+            case "basic":
+                return getAuthHandler(AuthType.BASIC);
+            case "oauth":
+                return getAuthHandler(AuthType.OAUTH);
+            case "api_key":
+            case "apikey":
+            case "api-key":
+                return getAuthHandler(AuthType.API_KEY);
+            case "bearer":
+            case "bearer_token":
+            case "bearer-token":
+                return getAuthHandler(AuthType.BEARER_TOKEN);
+            default:
+                return getAuthHandler(AuthType.NO_AUTH);
+        }
+    }
+
+    /**
      * Creates and returns a basic authentication handler with provided credentials
      *
      * @param username Username for basic authentication

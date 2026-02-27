@@ -1,53 +1,43 @@
-package APIAutomationFrameworkATB10x.src.main.java.com.prasad_v.retry;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
-import org.testng.IAnnotationTransformer;
-import org.testng.annotations.ITestAnnotation;
+package com.prasad_v.retry;
 
 import com.prasad_v.config.ConfigurationManager;
 import com.prasad_v.logging.CustomLogger;
+import org.testng.IRetryAnalyzer;
+import org.testng.ITestResult;
 
 /**
- * RetryListener implements IAnnotationTransformer to automatically apply
- * the RetryAnalyzer to all test methods at runtime.
+ * RetryAnalyzer retries failed tests based on framework configuration.
  */
-public class RetryListener implements IAnnotationTransformer {
+public class RetryAnalyzer implements IRetryAnalyzer {
 
-    private static final CustomLogger logger = new CustomLogger(RetryListener.class);
+    private static final CustomLogger logger = new CustomLogger(RetryAnalyzer.class);
+    private int currentRetryCount = 0;
+    private int maxRetryCount;
 
-    /**
-     * This method is called by TestNG to give the transformer an opportunity to modify
-     * a TestNG annotation read from your test classes.
-     *
-     * @param annotation The annotation that will be used for the test
-     * @param testClass The test class
-     * @param testConstructor The test constructor
-     * @param testMethod The test method
-     */
-    @Override
-    public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
-        // Set RetryAnalyzer for all test methods
-        if (annotation.getRetryAnalyzer() == null) {
-            boolean retryEnabled = Boolean.parseBoolean(
-                    ConfigurationManager.getInstance().getConfigProperty("retry.enabled", "true"));
-
-            if (retryEnabled) {
-                logger.info("Setting retry analyzer for: " + testMethod.getName());
-                RetryAnalyzer analyzer = new RetryAnalyzer();
-
-                // Get retry count from configuration or use default
-                String retryCountStr = ConfigurationManager.getInstance().getConfigProperty("retry.count", "2");
-                try {
-                    int retryCount = Integer.parseInt(retryCountStr);
-                    analyzer.setMaxRetryCount(retryCount);
-                } catch (NumberFormatException e) {
-                    logger.warn("Invalid retry count in configuration. Using default value of 2");
-                }
-
-                annotation.setRetryAnalyzer(RetryAnalyzer.class);
-            }
+    public RetryAnalyzer() {
+        String configuredCount = ConfigurationManager.getInstance()
+                .getConfigProperty("request.retry.count",
+                        ConfigurationManager.getInstance().getConfigProperty("retry.count", "2"));
+        try {
+            maxRetryCount = Integer.parseInt(configuredCount);
+        } catch (NumberFormatException e) {
+            maxRetryCount = 2;
+            logger.warn("Invalid retry count configuration. Falling back to {}", maxRetryCount);
         }
+    }
+
+    @Override
+    public boolean retry(ITestResult result) {
+        if (currentRetryCount < maxRetryCount) {
+            currentRetryCount++;
+            logger.warn("Retrying test {}. Attempt {}/{}",
+                    result.getName(), currentRetryCount, maxRetryCount);
+            return true;
+        }
+        return false;
+    }
+
+    public void setMaxRetryCount(int maxRetryCount) {
+        this.maxRetryCount = Math.max(0, maxRetryCount);
     }
 }

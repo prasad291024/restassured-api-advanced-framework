@@ -46,8 +46,8 @@ public class TestE2EFlow_02 extends BaseTest {
         // Deserialize the response JSON into a BookingResponse Java object
         BookingResponse bookingResponse = payloadManager.bookingResponseJava(response.asString());
 
-        // Validate first name is 'Pramod' and booking ID is not null
-        assertActions.verifyStringKey(bookingResponse.getBooking().getFirstname(), "Pramod");
+        // Validate first name is 'Prasad' and booking ID is not null
+        assertActions.verifyStringKey(bookingResponse.getBooking().getFirstname(), "Prasad");
         assertActions.verifyStringKeyNotNull(bookingResponse.getBookingid());
 
         // Store booking ID in TestNG context for use in other test methods

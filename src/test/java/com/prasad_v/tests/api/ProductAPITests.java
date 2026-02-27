@@ -277,7 +277,7 @@ public class ProductAPITests extends BaseTest {
 
     @DataProvider(name = "createProductData")
     public Object[][] createProductData() {
-        return dataProvider.getTestData(PRODUCT_DATA_FILE, "createProducts");
+        return dataProvider.getTestData(PRODUCT_DATA_FILE, "newProducts");
     }
 
     private String getBaseUrl() {

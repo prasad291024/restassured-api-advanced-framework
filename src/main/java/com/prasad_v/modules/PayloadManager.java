@@ -2,8 +2,8 @@ package com.prasad_v.modules;
 
 import com.google.gson.Gson;
 import com.prasad_v.builders.BookingBuilder;
+import com.prasad_v.config.SecureConfigManager;
 import com.prasad_v.pojos.Booking;
-import com.prasad_v.pojos.Bookingdates;
 import com.prasad_v.pojos.BookingResponse;
 import com.prasad_v.pojos.Auth;
 import com.prasad_v.pojos.TokenResponse;
@@ -17,6 +17,7 @@ import com.prasad_v.pojos.TokenResponse;
 
 public class PayloadManager {
     private final Gson gson = new Gson();
+    private final SecureConfigManager secureConfigManager = SecureConfigManager.getInstance();
 
     public String createPayloadBookingAsString() {
         Booking booking = new BookingBuilder()
@@ -41,8 +42,10 @@ public class PayloadManager {
 
     public String setAuthPayload() {
         Auth auth = new Auth();
-        auth.setUsername("admin");
-        auth.setPassword("password123");
+        String username = secureConfigManager.getUsername();
+        String password = secureConfigManager.getPassword();
+        auth.setUsername((username == null || username.isBlank()) ? "admin" : username);
+        auth.setPassword((password == null || password.isBlank()) ? "password123" : password);
         return gson.toJson(auth);
     }
 

@@ -30,24 +30,27 @@ public class RetryListener implements IAnnotationTransformer {
     public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
         // Set RetryAnalyzer for all test methods
         if (annotation.getRetryAnalyzer() == null) {
-            boolean retryEnabled = Boolean.parseBoolean(
-                    ConfigurationManager.getInstance().getConfigProperty("retry.enabled", "true"));
+            boolean retryEnabled = Boolean.parseBoolean(firstNonBlank(
+                    ConfigurationManager.getInstance().getConfigProperty("request.retry.enabled", ""),
+                    ConfigurationManager.getInstance().getConfigProperty("retry.enabled", "true")
+            ));
 
             if (retryEnabled) {
                 logger.info("Setting retry analyzer for: " + testMethod.getName());
-                RetryAnalyzer analyzer = new RetryAnalyzer();
-
-                // Get retry count from configuration or use default
-                String retryCountStr = ConfigurationManager.getInstance().getConfigProperty("retry.count", "2");
-                try {
-                    int retryCount = Integer.parseInt(retryCountStr);
-                    analyzer.setMaxRetryCount(retryCount);
-                } catch (NumberFormatException e) {
-                    logger.warn("Invalid retry count in configuration. Using default value of 2");
-                }
-
                 annotation.setRetryAnalyzer(RetryAnalyzer.class);
             }
         }
+    }
+
+    private String firstNonBlank(String... values) {
+        if (values == null) {
+            return "";
+        }
+        for (String value : values) {
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return "";
     }
 }

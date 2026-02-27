@@ -201,7 +201,7 @@ public class JsonDataProvider {
      * @throws APIException If there's an error reading or processing the JSON file
      */
     public JSONObject getJsonObjectById(String fileName, String idField, String idValue) throws APIException {
-        String testDataDir = configManager.getConfigProperty("testdata.dir", "src/test/resources/testdata");
+        String testDataDir = resolveTestDataPath();
         String filePath = testDataDir + File.separator + fileName;
 
         try {
@@ -221,5 +221,38 @@ public class JsonDataProvider {
             logger.error("Error finding JSON object by ID in file: " + filePath, e);
             throw new APIException("Failed to find JSON object by ID: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Backward-compatible TestNG data provider utility used by existing tests.
+     *
+     * @param fileName JSON file in test data directory
+     * @param sectionName section under "testData" key
+     * @return TestNG compatible 2D object array
+     */
+    public Object[][] getTestData(String fileName, String sectionName) {
+        String filePath = resolveTestDataPath() + File.separator + fileName;
+        JSONObject root = readJsonFile(filePath);
+        JSONObject testData = root.optJSONObject("testData");
+        if (testData == null) {
+            throw new APIException("Missing 'testData' object in file: " + fileName);
+        }
+
+        JSONArray dataArray = testData.optJSONArray(sectionName);
+        if (dataArray == null) {
+            throw new APIException("Missing or non-array section '" + sectionName + "' in file: " + fileName);
+        }
+
+        Object[][] data = new Object[dataArray.length()][1];
+        for (int i = 0; i < dataArray.length(); i++) {
+            JSONObject jsonObject = dataArray.getJSONObject(i);
+            data[i][0] = jsonObjectToMap(jsonObject);
+        }
+        return data;
+    }
+
+    private String resolveTestDataPath() {
+        return configManager.getConfigProperty("test.data.path",
+                configManager.getConfigProperty("testdata.dir", "src/test/resources/testdata"));
     }
 }

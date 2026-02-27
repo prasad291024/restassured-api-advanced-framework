@@ -1,6 +1,7 @@
 package com.prasad_v.tests.base;
 
 import com.prasad_v.constants.APIConstants;
+import com.prasad_v.config.ConfigurationManager;
 import com.prasad_v.asserts.AssertActions;
 import com.prasad_v.modules.PayloadManager;
 import com.prasad_v.interceptors.RequestResponseInterceptor;
@@ -18,6 +19,7 @@ import org.testng.annotations.BeforeMethod;
  * It sets up common configurations such as base URL, headers, and authentication token retrieval.
  */
 public class BaseTest {
+    protected ConfigurationManager config;
     public RequestSpecification requestSpecification;
     public AssertActions assertActions;
     public PayloadManager payloadManager;
@@ -27,18 +29,21 @@ public class BaseTest {
 
     @BeforeMethod
     public void setUp() {
+        config = ConfigurationManager.getInstance();
         payloadManager = new PayloadManager();
         assertActions = new AssertActions();
+        String baseUrl = config.getProperty("api.base.url", APIConstants.BASE_URL);
         requestSpecification = new RequestSpecBuilder()
-                .setBaseUri(APIConstants.BASE_URL)
+                .setBaseUri(baseUrl)
                 .addHeader("Content-Type", "application/json")
                 .addFilter(new RequestResponseInterceptor())
                 .build();
     }
 
     public String getToken() {
+        String baseUrl = config.getProperty("api.base.url", APIConstants.BASE_URL);
         requestSpecification = RestAssured.given()
-                .baseUri(APIConstants.BASE_URL)
+                .baseUri(baseUrl)
                 .basePath(APIConstants.AUTH_URL);
         
         response = requestSpecification

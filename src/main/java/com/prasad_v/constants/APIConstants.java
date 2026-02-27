@@ -11,6 +11,8 @@ public class APIConstants {
     public static final String CREATE_UPDATE_BOOKING_URL = "/booking";
     public static final String AUTH_URL = "/auth";
     public static final String PING_URL = "/ping";
+    public static final String USERS_ENDPOINT = "/users";
+    public static final String PRODUCTS_ENDPOINT = "/products";
 
     // HTTP Methods
     public static final String HTTP_GET = "GET";

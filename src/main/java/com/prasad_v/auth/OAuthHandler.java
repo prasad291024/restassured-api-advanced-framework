@@ -51,9 +51,10 @@ public class OAuthHandler implements IAuthHandler {
     public OAuthHandler() {
         // Try to get OAuth endpoints from configuration
         try {
-            this.tokenUrl = ConfigurationManager.getProperty("oauth.token.url");
-            this.authUrl = ConfigurationManager.getProperty("oauth.auth.url");
-            this.redirectUri = ConfigurationManager.getProperty("oauth.redirect.uri");
+            ConfigurationManager configManager = ConfigurationManager.getInstance();
+            this.tokenUrl = configManager.getProperty("oauth.token.url");
+            this.authUrl = configManager.getProperty("oauth.auth.url");
+            this.redirectUri = configManager.getProperty("oauth.redirect.uri");
         } catch (Exception e) {
             logger.warn("OAuth URLs not found in configuration. Please set them manually.");
         }
@@ -209,8 +210,9 @@ public class OAuthHandler implements IAuthHandler {
 
             case PASSWORD:
                 formParams.put("grant_type", "password");
-                String username = ConfigurationManager.getProperty("oauth.username");
-                String password = ConfigurationManager.getProperty("oauth.password");
+                ConfigurationManager configManager = ConfigurationManager.getInstance();
+                String username = configManager.getProperty("oauth.username");
+                String password = configManager.getProperty("oauth.password");
                 formParams.put("username", username);
                 formParams.put("password", password);
                 if (scope != null && !scope.isEmpty()) {
@@ -321,6 +323,13 @@ public class OAuthHandler implements IAuthHandler {
     public String getAccessToken() {
         ensureValidAccessToken();
         return accessToken;
+    }
+
+    /**
+     * Backward-compatible alias for getAccessToken().
+     */
+    public String getToken() {
+        return getAccessToken();
     }
 
     /**

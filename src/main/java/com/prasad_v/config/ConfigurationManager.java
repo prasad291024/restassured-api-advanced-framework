@@ -78,12 +78,7 @@ public class ConfigurationManager {
      * @return Property value or null if not found
      */
     public String getProperty(String key) {
-        String value = properties.getProperty(key);
-        if (value != null && value.startsWith("${") && value.endsWith("}")) {
-            String envKey = value.substring(2, value.length() - 1);
-            return System.getenv(envKey);
-        }
-        return value;
+        return resolveEnvPlaceholder(properties.getProperty(key));
     }
 
     /**
@@ -109,7 +104,22 @@ public class ConfigurationManager {
      * @return Property value or default value if not found
      */
     public String getProperty(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+        String value = getProperty(key);
+        return value == null || value.isEmpty() ? defaultValue : value;
+    }
+
+    /**
+     * Backward-compatible alias used by existing framework classes.
+     */
+    public String getConfigProperty(String key) {
+        return getProperty(key);
+    }
+
+    /**
+     * Backward-compatible alias used by existing framework classes.
+     */
+    public String getConfigProperty(String key, String defaultValue) {
+        return getProperty(key, defaultValue);
     }
 
     /**
@@ -120,7 +130,7 @@ public class ConfigurationManager {
      * @return Property value as integer or default value
      */
     public int getIntProperty(String key, int defaultValue) {
-        String value = properties.getProperty(key);
+        String value = getProperty(key);
         if (value == null) {
             return defaultValue;
         }
@@ -139,7 +149,7 @@ public class ConfigurationManager {
      * @return Property value as boolean or default value
      */
     public boolean getBooleanProperty(String key, boolean defaultValue) {
-        String value = properties.getProperty(key);
+        String value = getProperty(key);
         if (value == null) {
             return defaultValue;
         }
@@ -171,5 +181,14 @@ public class ConfigurationManager {
      */
     public void clearProperties() {
         properties.clear();
+    }
+
+    private String resolveEnvPlaceholder(String value) {
+        if (value != null && value.startsWith("${") && value.endsWith("}")) {
+            String envKey = value.substring(2, value.length() - 1);
+            String envValue = System.getenv(envKey);
+            return envValue == null ? "" : envValue;
+        }
+        return value;
     }
 }
