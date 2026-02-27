@@ -3,6 +3,7 @@ package com.prasad_v.tests.base;
 import com.prasad_v.constants.APIConstants;
 import com.prasad_v.asserts.AssertActions;
 import com.prasad_v.modules.PayloadManager;
+import com.prasad_v.interceptors.RequestResponseInterceptor;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -31,7 +32,8 @@ public class BaseTest {
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(APIConstants.BASE_URL)
                 .addHeader("Content-Type", "application/json")
-                .build().log().all();
+                .addFilter(new RequestResponseInterceptor())
+                .build();
     }
 
     public String getToken() {
