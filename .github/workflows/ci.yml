@@ -1,0 +1,32 @@
+name: API Framework CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22'
+          cache: maven
+
+      - name: Make Maven Wrapper Executable
+        run: chmod +x mvnw
+
+      - name: Compile
+        run: ./mvnw -B clean compile
+
+      - name: Run Regression Suite
+        run: ./mvnw -B test -DsuiteXmlFile=testng_reg.xml -Denv=dev
+
+      - name: Verify Retry Listener Behavior
+        run: ./mvnw -B test -DsuiteXmlFile=testng_retry_check.xml -Denv=dev
