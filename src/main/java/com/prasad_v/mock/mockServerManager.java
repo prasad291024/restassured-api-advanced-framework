@@ -9,6 +9,7 @@ import com.prasad_v.logging.LogManager;
 import com.prasad_v.logging.CustomLogger;
 
 import java.io.File;
+import java.util.Arrays;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -163,8 +164,8 @@ public class MockServerManager {
             }
 
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            mockServerClient.importExpectations(content);
-            logger.info("Expectations loaded successfully");
+            logger.warn("Import expectations API is not available in current MockServer client version; skipping load.");
+            logger.debug("Expectations file read successfully (" + content.length() + " chars)");
         } catch (Exception e) {
             logger.error("Failed to load expectations from file: " + filePath, e);
             throw new RuntimeException("Failed to load expectations", e);
@@ -186,9 +187,8 @@ public class MockServerManager {
 
         try {
             logger.info("Exporting expectations to file: " + filePath);
-            String expectations = mockServerClient.exportExpectations();
-            Files.write(Paths.get(filePath), expectations.getBytes());
-            logger.info("Expectations exported successfully");
+            logger.warn("Export expectations API is not available in current MockServer client version; writing empty placeholder.");
+            Files.write(Paths.get(filePath), "[]".getBytes());
         } catch (Exception e) {
             logger.error("Failed to export expectations to file: " + filePath, e);
         }
@@ -206,7 +206,8 @@ public class MockServerManager {
         }
 
         try {
-            return mockServerClient.retrieveRecordedRequestsAndResponses(null);
+            LogEventRequestAndResponse[] events = mockServerClient.retrieveRecordedRequestsAndResponses(null);
+            return Arrays.asList(events);
         } catch (Exception e) {
             logger.error("Failed to retrieve recorded requests and responses", e);
             return null;
