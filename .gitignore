@@ -39,6 +39,9 @@ build/
 
 ### Security ###
 .env
+.env.local
+.env.*
+!.env.example
 *.jks
 *.p12
 *.pem
@@ -50,3 +53,9 @@ allure-results/
 allure-report/
 test-output/
 logs/
+coverage/
+*.log
+
+### IntelliJ Workspace ###
+.idea/
+!.idea/.gitignore
