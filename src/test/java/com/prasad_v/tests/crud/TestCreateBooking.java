@@ -1,6 +1,6 @@
 package com.prasad_v.tests.crud;
 
-import com.prasad_v.endpoints.APIConstants;
+import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.pojos.BookingResponse;
 import io.qameta.allure.Description;

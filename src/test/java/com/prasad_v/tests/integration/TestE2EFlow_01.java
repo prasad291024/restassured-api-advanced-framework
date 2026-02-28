@@ -9,7 +9,7 @@ package com.prasad_v.tests.integration;
  * 5. Delete the Booking using the booking ID.
  */
 
-import com.prasad_v.endpoints.APIConstants;
+import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.pojos.Booking;
 import com.prasad_v.pojos.BookingResponse;

@@ -1,2 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd"><suite name="All Test Suite"><test verbose="2" preserve-order="true" name="C:/Users/prasa/IdeaProjects/APIAutomationFrameworkATB10x"><classes><class name="com.prasad_v.tests.crud.TestCreateBooking"><methods><include name="testCreateBookingPOST"/></methods></class><class name="com.prasad_v.tests.crud.TestCreateToken"><methods><include name="testTokenPOST"/></methods></class><class name="com.prasad_v.tests.crud.TestHealthCheck"><methods><include name="testGETHealthCheck"/></methods></class><class name="com.prasad_v.tests.integration.E2ETest_Assignment1"><methods><include name="testCreateDeleteVerifyBooking"/></methods></class><class name="com.prasad_v.tests.integration.E2ETest_Assignment2"><methods><include name="testGetAndTryToDeleteBooking"/></methods></class><class name="com.prasad_v.tests.integration.E2ETest_Assignment3"><methods><include name="testCreateUpdateDeleteBooking"/></methods></class><class name="com.prasad_v.tests.integration.E2ETest_Assignment4"><methods><include name="testDeleteThenTryToUpdateBooking"/></methods></class><class name="com.prasad_v.tests.integration.TestE2EFlow_01"><methods><include name="testCreateBooking"/><include name="testVerifyBookingId"/><include name="testUpdateBookingByID"/><include name="testDeleteBookingById"/></methods></class><class name="com.prasad_v.tests.integration.TestE2EFlow_02"><methods><include name="createBooking"/><include name="verifyBooking"/><include name="deleteBooking"/><include name="verifyBookingDeleted"/></methods></class><class name="com.prasad_v.tests.sample.TestIntegrationSample"><methods><include name="testCreateBooking"/><include name="testVerifyBookingId"/><include name="testUpdateBookingByID"/><include name="testDeleteBookingById"/></methods></class></classes></test></suite>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <listeners>
+        <listener class-name="com.prasad_v.retry.RetryListener"/>
+    </listeners>
+
+    <test verbose="2" preserve-order="true" name="C:/Users/prasa/IdeaProjects/APIAutomationFrameworkATB10x">
+        <classes>
+            <class name="com.prasad_v.tests.crud.TestCreateBooking">
+                <methods>
+                    <include name="testCreateBookingPOST"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.crud.TestCreateToken">
+                <methods>
+                    <include name="testTokenPOST"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.crud.TestHealthCheck">
+                <methods>
+                    <include name="testGETHealthCheck"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment1">
+                <methods>
+                    <include name="testCreateDeleteVerifyBooking"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment2">
+                <methods>
+                    <include name="testGetAndTryToDeleteBooking"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment3">
+                <methods>
+                    <include name="testCreateUpdateDeleteBooking"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment4">
+                <methods>
+                    <include name="testDeleteThenTryToUpdateBooking"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.integration.TestE2EFlow_01">
+                <methods>
+                    <include name="testCreateBooking"/>
+                    <include name="testVerifyBookingId"/>
+                    <include name="testUpdateBookingByID"/>
+                    <include name="testDeleteBookingById"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.integration.TestE2EFlow_02">
+                <methods>
+                    <include name="createBooking"/>
+                    <include name="verifyBooking"/>
+                    <include name="deleteBooking"/>
+                    <include name="verifyBookingDeleted"/>
+                </methods>
+            </class>
+            <class name="com.prasad_v.tests.sample.TestIntegrationSample">
+                <methods>
+                    <include name="testCreateBooking"/>
+                    <include name="testVerifyBookingId"/>
+                    <include name="testUpdateBookingByID"/>
+                    <include name="testDeleteBookingById"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
