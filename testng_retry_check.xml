@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Retry Verification Suite">
+    <listeners>
+        <listener class-name="com.prasad_v.retry.RetryListener"/>
+        <listener class-name="com.prasad_v.listeners.TestExecutionListener"/>
+    </listeners>
+
+    <test name="Retry Verification Test">
+        <classes>
+            <class name="com.prasad_v.tests.sample.RetryListenerVerificationTest"/>
+        </classes>
+    </test>
+</suite>
