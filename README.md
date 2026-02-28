@@ -4,7 +4,7 @@
 
 API Automation Framework with the CRUD of Restful Booker
 
-`mvn test -Dsurefire.suiteXmlFiles=testng.xml`
+`./mvnw test -DsuiteXmlFile=testng.xml` (Linux/macOS) or `mvnw.cmd test -DsuiteXmlFile=testng.xml` (Windows)
 
 <img width="1130" alt="Screenshot 2023-10-31 at 12 25 55 PM" src="https://github.com/PramodDutta/APIAutomationRestAssured/assets/1409610/69f398b3-8798-4fba-a091-3b1e321dcc7d">
 
@@ -51,7 +51,7 @@ API Automation Framework with the CRUD of Restful Booker
 ```
 to **pom.xml**
 
-```mvn clean test -DsuiteXmlFile=testng.xml ```
+```./mvnw clean test -DsuiteXmlFile=testng.xml ```
 
 
 ### Parallel Execution
@@ -63,7 +63,7 @@ To run tests in parallel, add the parallel attribute to your testng.xml file:
 
 ### Integration Test (Create BookinG and Create Token , Update and Delete Booking)
 
-``` mvn clean test -DsuiteXmlFile=testng-integration.xml```
+```./mvnw clean test -DsuiteXmlFile=testng_E2E.xml```
 
 ### Allure Report Generated.
 
