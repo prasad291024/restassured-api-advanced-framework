@@ -5,7 +5,7 @@ import com.prasad_v.config.ConfigurationManager;
 import com.prasad_v.asserts.AssertActions;
 import com.prasad_v.modules.PayloadManager;
 import com.prasad_v.interceptors.RequestResponseInterceptor;
-import io.restassured.RestAssured;
+import com.prasad_v.utils.RestUtils;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -42,15 +42,8 @@ public class BaseTest {
 
     public String getToken() {
         String baseUrl = config.getProperty("api.base.url", APIConstants.BASE_URL);
-        requestSpecification = RestAssured.given()
-                .baseUri(baseUrl)
-                .basePath(APIConstants.AUTH_URL);
-        
-        response = requestSpecification
-                .contentType(ContentType.JSON)
-                .body(payloadManager.setAuthPayload())
-                .when().post();
-        
+        requestSpecification.baseUri(baseUrl).basePath(APIConstants.AUTH_URL).contentType(ContentType.JSON);
+        response = RestUtils.post(requestSpecification, payloadManager.setAuthPayload());
         return payloadManager.getTokenFromJSON(response.asString());
     }
 }

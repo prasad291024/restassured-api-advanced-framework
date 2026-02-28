@@ -13,9 +13,9 @@ import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.pojos.Booking;
 import com.prasad_v.pojos.BookingResponse;
+import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
-import io.restassured.RestAssured;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
@@ -48,9 +48,7 @@ public class TestE2EFlow_01 extends BaseTest {
         requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
 
         // Sending a POST request with the booking payload and storing the response
-        response = RestAssured.given(requestSpecification)
-                .when().body(payloadManager.createPayloadBookingAsString())
-                .post();
+        response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
 
         // Logging and validating the response
         validatableResponse = response.then().log().all();
@@ -87,9 +85,7 @@ public class TestE2EFlow_01 extends BaseTest {
 
         // Sending a GET request to retrieve booking details
         requestSpecification.basePath(basePathGET);
-        response = RestAssured
-                .given(requestSpecification)
-                .when().get();
+        response = RestUtils.get(requestSpecification);
 
         // Logging and validating the response
         validatableResponse = response.then().log().all();
@@ -127,9 +123,7 @@ public class TestE2EFlow_01 extends BaseTest {
 
         // Sending a PUT request with new booking data
         requestSpecification.basePath(basePathPUTPATCH);
-        response = RestAssured
-                .given(requestSpecification).cookie("token", token)
-                .when().body(payloadManager.fullUpdatePayloadAsString()).put();
+        response = RestUtils.put(requestSpecification, payloadManager.fullUpdatePayloadAsString(), token);
 
         // Logging and validating the response
         validatableResponse = response.then().log().all();
@@ -163,9 +157,9 @@ public class TestE2EFlow_01 extends BaseTest {
         String basePathDELETE = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingid;
 
         // Sending a DELETE request with authentication token
-        requestSpecification.basePath(basePathDELETE).cookie("token", token);
-        validatableResponse = RestAssured.given().spec(requestSpecification)
-                .when().delete().then().log().all();
+        requestSpecification.basePath(basePathDELETE);
+        response = RestUtils.delete(requestSpecification, token);
+        validatableResponse = response.then().log().all();
 
         // Validating response - Expected HTTP status: 201 (Deleted Successfully)
         validatableResponse.statusCode(201);

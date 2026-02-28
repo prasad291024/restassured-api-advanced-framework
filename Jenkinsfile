@@ -31,7 +31,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh "mvn -B test -Denv=${params.ENV} -DsuiteXmlFile=${params.SUITE}"
+                sh "mvn -B verify -Denv=${params.ENV} -DsuiteXmlFile=${params.SUITE}"
             }
         }
     }

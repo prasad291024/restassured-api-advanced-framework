@@ -2,10 +2,10 @@ package com.prasad_v.tests.crud;
 
 import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
+import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.qameta.allure.TmsLink;
-import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
 /**
@@ -29,10 +29,7 @@ public class TestCreateToken extends BaseTest {
         requestSpecification.basePath(APIConstants.AUTH_URL);
 
         // Send a POST request with authentication payload
-        response = RestAssured.given(requestSpecification)
-                .when()
-                .body(payloadManager.setAuthPayload()) // Set authentication credentials (e.g., username & password)
-                .post(); // Execute the POST request
+        response = RestUtils.post(requestSpecification, payloadManager.setAuthPayload());
 
         // Log the response and store it in a validatable format
         validatableResponse = response.then().log().all();

@@ -3,10 +3,10 @@ package com.prasad_v.tests.crud;
 import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.pojos.BookingResponse;
+import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.qameta.allure.TmsLink;
-import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
 /**
@@ -30,10 +30,7 @@ public class TestCreateBooking extends BaseTest {
         requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
 
         // Send a POST request with booking details in the request body
-        response = RestAssured.given(requestSpecification)
-                .when()
-                .body(payloadManager.createPayloadBookingAsString()) // Set booking details
-                .post(); // Execute the POST request
+        response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
 
         // Log the response and store it in a validatable format
         validatableResponse = response.then().log().all();
