@@ -44,3 +44,9 @@ build/
 *.pem
 *.key
 src/test/resources/security/
+
+### Test/Report Artifacts ###
+allure-results/
+allure-report/
+test-output/
+logs/
