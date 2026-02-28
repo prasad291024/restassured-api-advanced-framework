@@ -4,7 +4,7 @@
 
 API Automation Framework with the CRUD of Restful Booker
 
-`./mvnw test -DsuiteXmlFile=testng.xml` (Linux/macOS) or `mvnw.cmd test -DsuiteXmlFile=testng.xml` (Windows)
+`mvn test -Dsurefire.suiteXmlFiles=testng.xml`
 
 <img width="1130" alt="Screenshot 2023-10-31 at 12 25 55 PM" src="https://github.com/PramodDutta/APIAutomationRestAssured/assets/1409610/69f398b3-8798-4fba-a091-3b1e321dcc7d">
 
@@ -51,7 +51,7 @@ API Automation Framework with the CRUD of Restful Booker
 ```
 to **pom.xml**
 
-```./mvnw clean test -DsuiteXmlFile=testng.xml ```
+```mvn clean test -DsuiteXmlFile=testng.xml ```
 
 
 ### Parallel Execution
@@ -63,11 +63,7 @@ To run tests in parallel, add the parallel attribute to your testng.xml file:
 
 ### Integration Test (Create BookinG and Create Token , Update and Delete Booking)
 
-```./mvnw clean test -DsuiteXmlFile=testng_E2E.xml```
-
-### Retry Listener Verification
-
-```./mvnw test -DsuiteXmlFile=testng_retry_check.xml```
+``` mvn clean test -DsuiteXmlFile=testng-integration.xml```
 
 ### Allure Report Generated.
 
@@ -162,3 +158,33 @@ This will start a local web server and open the report in your default browser.
 - For more advanced configurations and features, refer to the official Allure documentation.
 
 By following these steps, you should be able to successfully install Allure, run your TestNG tests, and generate a comprehensive Allure report for your Java project.
+
+
+#### Try these Cases also
+
+POSTMAN Assignments
+ Assignment  1
+
+Create the Collections for the This Test cases :
+
+App - Restful Booker with(Auth)
+
+1. Create a Booking, Update the Booking Name, Get the Booking by Id and verify.
+2.  Create a Booking, Delete the Booking with Id and Verify using GET request that it should not exist.
+3. Get an Existing Booking from Get All Bookings Ids , Update a Booking and Verify using GET by id.
+4. Create a BOOKING, Delete It
+5. Invalid Creation - enter a wrong payload or Wrong JSON.
+6. Trying to Update on a Delete Id
+
+
+Test for the Single Req
+1. Response
+2. Status Code
+3. Headers
+
+———
+
+Create Collection
+- [ ] RestfulBooker CRUD operation.
+- [ ] Add from Snippets , Test cases
+- [ ] Integration Scenarios (Hard Coded)
