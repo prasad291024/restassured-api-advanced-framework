@@ -58,3 +58,29 @@ Expected behavior:
 
 The pipeline file is available at `Jenkinsfile`.
 Use the `ENV` and `SUITE` parameters to select target environment and suite XML.
+
+## Environment Governance
+
+For `qa` and `prod`, framework startup now validates configuration and fails fast if:
+- URLs are missing or still use placeholder domains (like `example.com`)
+- Required auth values are missing
+
+### Required Variables
+
+QA:
+- `AUTH_CLIENT_ID`
+- `AUTH_CLIENT_SECRET`
+- `AUTH_USERNAME`
+- `AUTH_PASSWORD`
+
+PROD:
+- `PROD_CLIENT_ID`
+- `PROD_CLIENT_SECRET`
+- `PROD_API_USERNAME`
+- `PROD_API_PASSWORD`
+
+Optional SSL:
+- `SSL_KEYSTORE_PASSWORD` (qa)
+- `PROD_KEYSTORE_PASSWORD` (prod)
+
+Use `.env.example` as the template for your local/CI secret setup.

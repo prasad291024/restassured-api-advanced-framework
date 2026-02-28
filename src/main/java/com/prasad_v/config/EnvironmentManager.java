@@ -38,6 +38,7 @@ public class EnvironmentManager {
     public void initializeEnvironment() {
         String configFile = CONFIG_PATH + currentEnvironment + ".properties";
         configManager.loadConfigFromResource(configFile);
+        EnvironmentConfigValidator.validate(currentEnvironment, configManager);
     }
 
     /**
