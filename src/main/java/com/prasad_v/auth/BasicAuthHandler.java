@@ -3,6 +3,8 @@ package com.prasad_v.auth;
 import io.restassured.specification.RequestSpecification;
 import com.prasad_v.auth.AuthenticationFactory.IAuthHandler;
 import com.prasad_v.logging.CustomLogger;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Handles Basic Authentication for API requests.
@@ -102,6 +104,14 @@ public class BasicAuthHandler implements IAuthHandler {
      */
     public boolean isCredentialsSet() {
         return username != null && !username.isEmpty() && password != null;
+    }
+
+    /**
+     * Returns a Basic authorization header for the provided credentials.
+     */
+    public String getAuthorizationHeader(String user, String pass) {
+        String token = Base64.getEncoder().encodeToString((user + ":" + pass).getBytes(StandardCharsets.UTF_8));
+        return "Basic " + token;
     }
 
     /**

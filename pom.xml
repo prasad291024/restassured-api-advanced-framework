@@ -27,7 +27,7 @@
     <gson.version>2.10.1</gson.version>
     <commons.lang.version>3.14.0</commons.lang.version>
     <aspectj.version>1.9.21</aspectj.version>
-    <jacoco.version>0.8.12</jacoco.version>
+    <jacoco.version>0.8.13</jacoco.version>
     <checkstyle.plugin.version>3.4.0</checkstyle.plugin.version>
     <spotbugs.plugin.version>4.8.6.5</spotbugs.plugin.version>
   </properties>
@@ -39,7 +39,6 @@
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <version>5.5.5</version>
-      <scope>test</scope>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.testng/testng -->
@@ -47,7 +46,6 @@
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>7.11.0</version>
-      <scope>test</scope>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
@@ -70,6 +68,12 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.12.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20240303</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/io.rest-assured/json-schema-validator -->
@@ -129,6 +133,12 @@
       <version>2.29.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports</artifactId>
+      <version>5.1.2</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -157,6 +167,18 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.17.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mock-server</groupId>
+      <artifactId>mockserver-netty</artifactId>
+      <version>5.15.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.everit.json</groupId>
+      <artifactId>org.everit.json.schema</artifactId>
+      <version>1.5.1</version>
     </dependency>
   </dependencies>
 

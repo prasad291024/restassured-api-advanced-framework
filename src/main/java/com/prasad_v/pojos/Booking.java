@@ -1,26 +1,33 @@
 package com.prasad_v.pojos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Booking {
 
     @SerializedName("firstname")
+    @JsonProperty("firstname")
     @Expose
     private String firstname;
     @SerializedName("lastname")
+    @JsonProperty("lastname")
     @Expose
     private String lastname;
     @SerializedName("totalprice")
+    @JsonProperty("totalprice")
     @Expose
     private Integer totalprice;
     @SerializedName("depositpaid")
+    @JsonProperty("depositpaid")
     @Expose
     private Boolean depositpaid;
     @SerializedName("bookingdates")
+    @JsonProperty("bookingdates")
     @Expose
     private Bookingdates bookingdates;
     @SerializedName("additionalneeds")
+    @JsonProperty("additionalneeds")
     @Expose
     private String additionalneeds;
 

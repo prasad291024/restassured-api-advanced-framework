@@ -25,7 +25,7 @@ public class RequestResponseInterceptor implements Filter {
         String correlationId = UUID.randomUUID().toString();
         Instant startTime = Instant.now();
         
-        if (!requestSpec.hasHeader(CORRELATION_ID_HEADER)) {
+        if (requestSpec.getHeaders() == null || !requestSpec.getHeaders().hasHeaderWithName(CORRELATION_ID_HEADER)) {
             requestSpec.header(CORRELATION_ID_HEADER, correlationId);
         }
         

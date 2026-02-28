@@ -314,7 +314,7 @@ public class ExtentTestManager {
             getTest().log(Status.INFO, markup);
         } catch (Exception e) {
             getTest().log(Status.INFO, json);
-            logger.warn("Failed to format JSON, logging as plain text", e);
+            logger.warn("Failed to format JSON, logging as plain text. " + e.getMessage());
         }
     }
 
@@ -329,7 +329,7 @@ public class ExtentTestManager {
             getTest().log(Status.INFO, markup);
         } catch (Exception e) {
             getTest().log(Status.INFO, xml);
-            logger.warn("Failed to format XML, logging as plain text", e);
+            logger.warn("Failed to format XML, logging as plain text. " + e.getMessage());
         }
     }
 

@@ -28,17 +28,15 @@ public class RetryListener implements IAnnotationTransformer {
      */
     @Override
     public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
-        // Set RetryAnalyzer for all test methods
-        if (annotation.getRetryAnalyzer() == null) {
-            boolean retryEnabled = Boolean.parseBoolean(firstNonBlank(
-                    ConfigurationManager.getInstance().getConfigProperty("request.retry.enabled", ""),
-                    ConfigurationManager.getInstance().getConfigProperty("retry.enabled", "true")
-            ));
+        boolean retryEnabled = Boolean.parseBoolean(firstNonBlank(
+                ConfigurationManager.getInstance().getConfigProperty("request.retry.enabled", ""),
+                ConfigurationManager.getInstance().getConfigProperty("retry.enabled", "true")
+        ));
 
-            if (retryEnabled) {
-                logger.info("Setting retry analyzer for: " + testMethod.getName());
-                annotation.setRetryAnalyzer(RetryAnalyzer.class);
-            }
+        if (retryEnabled) {
+            String methodName = testMethod != null ? testMethod.getName() : "unknown";
+            logger.info("Setting retry analyzer for: " + methodName);
+            annotation.setRetryAnalyzer(RetryAnalyzer.class);
         }
     }
 

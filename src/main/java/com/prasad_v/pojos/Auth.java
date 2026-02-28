@@ -1,6 +1,9 @@
 package com.prasad_v.pojos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Auth {
+    @JsonProperty("username")
     private String username;
 
     public String getPassword() {
@@ -19,5 +22,6 @@ public class Auth {
         this.username = username;
     }
 
+    @JsonProperty("password")
     private String password;
 }

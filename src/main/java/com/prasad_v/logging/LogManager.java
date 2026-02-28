@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -96,7 +95,7 @@ public class LogManager {
             File log4jFile = new File(configFile);
 
             if (log4jFile.exists()) {
-                LoggerContext context = (LoggerContext) LogManager.getContext(false);
+                LoggerContext context = (LoggerContext) org.apache.logging.log4j.LogManager.getContext(false);
                 context.setConfigLocation(log4jFile.toURI());
             } else {
                 // Use default configuration

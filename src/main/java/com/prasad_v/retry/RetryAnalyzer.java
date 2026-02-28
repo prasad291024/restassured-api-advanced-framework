@@ -22,7 +22,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
             maxRetryCount = Integer.parseInt(configuredCount);
         } catch (NumberFormatException e) {
             maxRetryCount = 2;
-            logger.warn("Invalid retry count configuration. Falling back to {}", maxRetryCount);
+            logger.warn("Invalid retry count configuration. Falling back to " + maxRetryCount);
         }
     }
 
@@ -30,8 +30,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
     public boolean retry(ITestResult result) {
         if (currentRetryCount < maxRetryCount) {
             currentRetryCount++;
-            logger.warn("Retrying test {}. Attempt {}/{}",
-                    result.getName(), currentRetryCount, maxRetryCount);
+            logger.warn("Retrying test " + result.getName() + ". Attempt " + currentRetryCount + "/" + maxRetryCount);
             return true;
         }
         return false;

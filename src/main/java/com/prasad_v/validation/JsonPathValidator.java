@@ -252,9 +252,9 @@ public class JsonPathValidator {
      * Log validation failure
      *
      * @param message Failure message
-     * @param e Exception
+     * @param e Throwable
      */
-    private void logFailure(String message, Exception e) {
+    private void logFailure(String message, Throwable e) {
         logger.error(message, e);
         ExtentTestManager.logFail(message);
     }

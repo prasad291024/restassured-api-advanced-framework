@@ -2,6 +2,7 @@
 <suite name="API Test Suite">
     <listeners>
         <listener class-name="com.prasad_v.retry.RetryListener"/>
+        <listener class-name="com.prasad_v.listeners.TestExecutionListener"/>
     </listeners>
 
     <test name="Booking API Tests">

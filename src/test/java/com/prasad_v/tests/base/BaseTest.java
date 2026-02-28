@@ -2,6 +2,7 @@ package com.prasad_v.tests.base;
 
 import com.prasad_v.constants.APIConstants;
 import com.prasad_v.config.ConfigurationManager;
+import com.prasad_v.config.EnvironmentManager;
 import com.prasad_v.asserts.AssertActions;
 import com.prasad_v.modules.PayloadManager;
 import com.prasad_v.interceptors.RequestResponseInterceptor;
@@ -12,6 +13,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeMethod;
 
 /**
@@ -27,7 +29,12 @@ public class BaseTest {
     public Response response;
     public ValidatableResponse validatableResponse;
 
-    @BeforeMethod
+    @BeforeSuite(alwaysRun = true)
+    public void initEnvironment() {
+        EnvironmentManager.getInstance().initializeEnvironment();
+    }
+
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
         config = ConfigurationManager.getInstance();
         payloadManager = new PayloadManager();
