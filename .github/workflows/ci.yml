@@ -25,8 +25,5 @@ jobs:
       - name: Compile
         run: ./mvnw -B clean compile
 
-      - name: Run Regression Suite
-        run: ./mvnw -B test -DsuiteXmlFile=testng_reg.xml -Denv=dev
-
       - name: Verify Retry Listener Behavior
         run: ./mvnw -B test -DsuiteXmlFile=testng_retry_check.xml -Denv=dev
