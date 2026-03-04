@@ -31,6 +31,7 @@ API Automation Framework for CRUD and end-to-end API workflows.
 ### Test Suites
 
 - Full suite: `./mvnw test -DsuiteXmlFile=testng.xml -Denv=dev`
+- Parallel suite: `./mvnw test -DsuiteXmlFile=testng_parallel.xml -Denv=dev`
 - Regression suite: `./mvnw test -DsuiteXmlFile=testng_reg.xml -Denv=dev`
 - E2E suite: `./mvnw test -DsuiteXmlFile=testng_E2E.xml -Denv=dev`
 
