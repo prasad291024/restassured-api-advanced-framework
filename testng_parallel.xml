@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Parallel Execution Suite" parallel="classes" thread-count="8" data-provider-thread-count="4" verbose="1">
+    <listeners>
+        <listener class-name="com.prasad_v.retry.RetryListener"/>
+        <listener class-name="com.prasad_v.listeners.TestExecutionListener"/>
+    </listeners>
+
+    <!-- Independent CRUD Tests - Can run in parallel -->
+    <test name="CRUD Tests" parallel="methods" thread-count="5">
+        <classes>
+            <class name="com.prasad_v.tests.crud.TestCreateBooking"/>
+            <class name="com.prasad_v.tests.crud.TestCreateToken"/>
+            <class name="com.prasad_v.tests.crud.TestHealthCheck"/>
+        </classes>
+    </test>
+
+    <!-- E2E Tests - Run as separate test groups -->
+    <test name="E2E Flow 1" preserve-order="true">
+        <classes>
+            <class name="com.prasad_v.tests.integration.TestE2EFlow_01"/>
+        </classes>
+    </test>
+
+    <test name="E2E Flow 2" preserve-order="true">
+        <classes>
+            <class name="com.prasad_v.tests.integration.TestE2EFlow_02"/>
+        </classes>
+    </test>
+
+    <!-- Assignment Tests - Can run in parallel -->
+    <test name="Assignment Tests" parallel="classes" thread-count="4">
+        <classes>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment1"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment2"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment3"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment4"/>
+        </classes>
+    </test>
+</suite>

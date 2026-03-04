@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All Test Suite" parallel="methods" thread-count="3">
+<suite name="All Test Suite" parallel="classes" thread-count="5" data-provider-thread-count="3">
     <listeners>
         <listener class-name="com.prasad_v.retry.RetryListener"/>
         <listener class-name="com.prasad_v.listeners.TestExecutionListener"/>
     </listeners>
 
-    <test verbose="2" preserve-order="true" name="C:/Users/prasa/IdeaProjects/APIAutomationFrameworkATB10x">
+    <test verbose="2" preserve-order="false" name="C:/Users/prasa/IdeaProjects/APIAutomationFrameworkATB10x">
         <classes>
             <class name="com.prasad_v.tests.crud.TestCreateBooking">
                 <methods>
