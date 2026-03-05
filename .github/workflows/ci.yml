@@ -74,15 +74,15 @@ jobs:
 
       - name: Publish Test Summary
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          name: Test Results - ${{ matrix.suite }}
-          path: target/surefire-reports/*.xml
-          reporter: java-junit
-          fail-on-error: false
+          files: |
+            target/surefire-reports/junitreports/TEST-*.xml
+          check_name: Test Results - ${{ matrix.suite }}
+          comment_mode: off
 
       - name: Add Test Summary to PR
-        if: always() && github.event_name == 'pull_request'
+        if: always()
         run: |
           echo "## Test Results - ${{ matrix.suite }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -97,6 +97,8 @@ jobs:
             echo "| ✅ Passed | $PASSED |" >> $GITHUB_STEP_SUMMARY
             echo "| ❌ Failed | $FAILED |" >> $GITHUB_STEP_SUMMARY
             echo "| ⏭️ Skipped | $SKIPPED |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Test results file not found" >> $GITHUB_STEP_SUMMARY
           fi
 
   retry-verification:
