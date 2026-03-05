@@ -15,11 +15,6 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        suite: [testng.xml, testng_parallel.xml]
-      fail-fast: false
 
     steps:
       - name: Checkout
@@ -48,9 +43,8 @@ jobs:
       - name: Compile
         run: ./mvnw -B clean compile
 
-      - name: Run Tests - ${{ matrix.suite }}
-        run: ./mvnw -B test -DsuiteXmlFile=${{ matrix.suite }} -Denv=dev
-        continue-on-error: true
+      - name: Run Tests
+        run: ./mvnw -B test -DsuiteXmlFile=testng.xml -Denv=dev
 
       - name: Generate Allure Report
         if: always()
@@ -63,7 +57,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-${{ matrix.suite }}
+          name: allure-report
           path: allure-report/
           retention-days: 30
 
@@ -71,7 +65,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ matrix.suite }}
+          name: test-results
           path: |
             target/surefire-reports/
             test-output/
@@ -80,7 +74,7 @@ jobs:
       - name: Add Test Summary to PR
         if: always()
         run: |
-          echo "## Test Results - ${{ matrix.suite }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f target/surefire-reports/testng-results.xml ]; then
             TOTAL=$(grep -oP '(?<=total=")[^"]*' target/surefire-reports/testng-results.xml | head -1)
