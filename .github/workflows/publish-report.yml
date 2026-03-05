@@ -1,0 +1,41 @@
+name: Publish Allure Report
+
+on:
+  workflow_run:
+    workflows: ["API Framework CI"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  publish-report:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == 'failure' }}
+    
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          
+      - name: Download Allure Report
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: ci.yml
+          name: allure-report-testng_parallel.xml
+          path: allure-report
+          
+      - name: Deploy to GitHub Pages
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          rm -rf docs/allure-report
+          mkdir -p docs
+          mv allure-report docs/
+          git add docs/allure-report
+          git commit -m "Update Allure report - $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes"
+          git push origin gh-pages

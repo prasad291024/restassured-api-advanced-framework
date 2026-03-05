@@ -57,6 +57,16 @@ Expected behavior:
 
 ## CI/CD
 
+The framework includes three automated workflows:
+
+1. **API Framework CI** - Runs on push/PR with matrix strategy
+2. **Publish Allure Report** - Deploys reports to GitHub Pages
+3. **Scheduled Regression** - Daily automated regression tests
+
+See [CI/CD Workflows Documentation](docs/CI_CD_WORKFLOWS.md) for details.
+
+### Jenkins Pipeline
+
 The pipeline file is available at `Jenkinsfile`.
 Use the `ENV` and `SUITE` parameters to select target environment and suite XML.
 
