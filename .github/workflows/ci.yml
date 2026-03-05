@@ -7,6 +7,11 @@ on:
     branches: [ master, main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -71,15 +76,6 @@ jobs:
             target/surefire-reports/
             test-output/
           retention-days: 30
-
-      - name: Publish Test Summary
-        if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: |
-            target/surefire-reports/junitreports/TEST-*.xml
-          check_name: Test Results - ${{ matrix.suite }}
-          comment_mode: off
 
       - name: Add Test Summary to PR
         if: always()
