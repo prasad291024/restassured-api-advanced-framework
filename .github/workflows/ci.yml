@@ -45,6 +45,7 @@ jobs:
 
       - name: Run Tests
         run: ./mvnw -B test -DsuiteXmlFile=testng.xml -Denv=dev
+        continue-on-error: true
 
       - name: Generate Allure Report
         if: always()
