@@ -62,3 +62,8 @@ coverage/
 ### IntelliJ Workspace ###
 .idea/
 !.idea/.gitignore
+
+
+### personal ###
+docs\archive\improvement-notes
+CLAUDE.md 
