@@ -2,7 +2,7 @@
 
 ## 1. Architectural Overview
 
-The framework is a modular, multi-layered API automation testing solution built on Java 22/25, REST Assured, TestNG, and Maven. It follows separation of concerns, decoupling test logic from HTTP communication, authentication, configuration, data generation, and reporting.
+The framework is a modular, multi-layered API automation testing solution built on Java 21 LTS (`--release 21`), REST Assured, TestNG, and Maven. It is verified across contemporary LTS runtimes (tested with JDK 21 and JDK 25), and follows strict separation of concerns, decoupling test logic from HTTP communication, authentication, configuration, data generation, and reporting.
 
 ```mermaid
 graph TD
@@ -96,11 +96,12 @@ graph TD
 | Pattern | Implementation Class | Purpose |
 | :--- | :--- | :--- |
 | **Builder** | `RequestBuilder`, `BookingBuilder` | Fluent, clean instantiation of complex HTTP requests and test payloads. |
-| **Service Layer** | `BookingService` | Decouples test assertions from underlying HTTP transport logic. |
-| **Singleton / Static Manager** | `ConfigurationManager`, `ExtentManager` | Centralized, thread-safe configuration and report lifecycle management. |
-| **Template Method** | `BaseTest` | Standardizes setup (`@BeforeMethod`), teardown (`@AfterMethod`), and context management. |
+| **Service Layer** | `BookingService`, `UserService`, `BaseApiService` | Decouples test assertions from underlying HTTP transport logic. |
+| **Factory** | `AuthenticationFactory` | Encapsulates construction of Basic, OAuth, Bearer token, and API key auth handlers. |
+| **Singleton / Static Manager** | `ConfigurationManager`, `ExtentTestManager`, `EnvironmentManager` | Centralized, thread-safe configuration and report lifecycle management. |
+| **Template Method** | `BaseTest` | Standardizes setup (`@BeforeSuite`, `@BeforeMethod`), teardown, and context management. |
 | **Observer** | `TestExecutionListener` | Listens to TestNG lifecycle events to trigger logging, sanitization, and report updates. |
-| **Interceptor / Filter** | `LoggingFilter` | Hooks into REST Assured execution pipeline to sanitize and log payloads. |
+| **Interceptor / Filter** | `RequestResponseInterceptor`, `LogSanitizer` | Hooks into REST Assured execution pipeline to sanitize and log payloads. |
 
 ---
 
@@ -110,26 +111,38 @@ graph TD
 src
 ├── main
 │   ├── java/com/prasad_v
-│   │   ├── config/              # ConfigurationManager, SecureConfigManager
-│   │   ├── constants/           # Framework constants & timeouts
-│   │   ├── core/                # RequestBuilder, API & Endpoint constants
-│   │   ├── filters/             # LoggingFilter, LogSanitizer
-│   │   ├── listeners/           # TestExecutionListener, RetryAnalyzer
-│   │   ├── logging/             # CustomLogger & Log4j2 integration
-│   │   ├── models/              # Jackson/Lombok POJOs
-│   │   ├── reporting/           # ExtentManager, ExtentTestManager
-│   │   ├── services/            # BookingService & business operations
-│   │   ├── utils/               # Excel, JSON, Schema & Assertions utils
-│   │   └── builders/            # BookingBuilder payload generator
+│   │   ├── auth/                # AuthenticationFactory, OAuthHandler, TokenManager
+│   │   ├── builders/            # BookingBuilder payload generator
+│   │   ├── config/              # ConfigurationManager, SecureConfigManager, EnvironmentManager
+│   │   ├── constants/           # Framework constants & APIConstants
+│   │   ├── enums/               # RequestType, Environment enums
+│   │   ├── interceptors/        # RequestResponseInterceptor, LogSanitizer
+│   │   ├── listeners/           # TestExecutionListener
+│   │   ├── logging/             # CustomLogger & LogSanitizer integration
+│   │   ├── mock/                # MockServerManager, RequestStubber
+│   │   ├── modules/             # PayloadManager JSON serialization
+│   │   ├── pojos/               # Jackson POJOs (Booking, Auth, TokenResponse)
+│   │   ├── reporting/           # ExtentReportManager, ExtentTestManager
+│   │   ├── requestbuilder/      # RequestBuilder, HeaderManager, AuthenticationManager
+│   │   ├── retry/               # RetryAnalyzer, RetryListener
+│   │   ├── services/            # BaseApiService, BookingService, UserService
+│   │   ├── testdata/            # ExcelDataProvider, JsonDataProvider
+│   │   ├── utils/               # RestUtils, AllureManager, DateUtils, ThreadSafeManager
+│   │   └── validation/          # ResponseValidator, SchemaValidator, ResponseTimeValidator
 │   └── resources/
-│       ├── log4j2.xml           # Logging configuration
-│       └── schemas/             # JSON Schema validation files
+│       └── log4j2.xml           # Logging configuration
 └── test
-    ├── java/com/prasad_v/tests
-    │   ├── base/                # BaseTest setup and shared helpers
-    │   ├── crud/                # Individual endpoint unit & CRUD tests
-    │   └── integration/         # Multi-step E2E workflows and assignments
+    ├── java/com/prasad_v
+    │   ├── asserts/             # AssertActions custom assertions
+    │   └── tests
+    │       ├── api/             # ProductAPITests, UserAPITests
+    │       ├── base/            # BaseTest setup and shared helpers
+    │       ├── crud/            # TestCreateBooking, TestCreateToken, TestHealthCheck
+    │       ├── integration/     # TestE2EFlow_01, TestE2EFlow_02, E2ETest_Assignment1-4
+    │       ├── sample/          # TestIntegrationSample, RetryListenerVerificationTest
+    │       └── security/        # SecurityTests (Authorization boundaries & LogSanitizer tests)
     └── resources/
-        ├── config/              # dev.properties, qa.properties, etc.
+        ├── config/              # dev.properties, qa.properties, staging.properties, prod.properties
+        ├── schemas/             # JSON Schema files (booking-schema.json, user-schema.json)
         └── testdata/            # Excel & JSON test data files
 ```

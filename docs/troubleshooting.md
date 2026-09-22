@@ -69,6 +69,22 @@ This guide provides step-by-step solutions for common issues, error codes, and e
 * **Root Cause**: Google Checks rule `PackageName` disallows underscores.
 * **Solution**: Use the project's customized `checkstyle.xml` configuration, which accommodates legitimate project namespaces while enforcing strict naming, whitespace, and import standards.
 
+### 3.3 Eclipse JDT LS Execution Environment Mismatch & Symbol Resolution
+* **Symptom**: IDE "Problems" tab shows cascade errors (e.g. `AssertActions cannot be resolved`, `BaseTest cannot be resolved`, or `Build path specifies execution environment JavaSE-22`).
+* **Root Cause**: `pom.xml` specified a Java version (e.g. Java 22) that does not match an installed JRE runtime in the workspace, causing Eclipse JDT LS to unbind the execution container.
+* **Solution**:
+  1. Set `<release>21</release>` in `pom.xml` along with source/target 21.
+  2. In `.vscode/settings.json`, set `"java.configuration.updateBuildConfiguration": "automatic"` and `"java.compile.nullAnalysis.mode": "disabled"`.
+  3. Clean and recompile: `mvnw.cmd clean test-compile`.
+
+### 3.4 Windows PowerShell CLI Argument Quoting
+* **Symptom**: In PowerShell, running `.\mvnw.cmd test -DsuiteXmlFile=testng_reg.xml` ignores the suite flag or fails with unexpected token errors.
+* **Root Cause**: PowerShell treats unquoted `-Dkey=value` as an expression rather than passing it verbatim to the batch script.
+* **Solution**: Enclose the property parameter in quotes:
+  ```powershell
+  .\mvnw.cmd test "-DsuiteXmlFile=testng_reg.xml"
+  ```
+
 ---
 
 ## 4. Debugging & Logging Techniques

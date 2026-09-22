@@ -34,9 +34,15 @@ This document records the architectural improvements, security hardening, bug fi
   * Namespaced `ITestContext` keys (`flow1_bookingid`, `flow2_bookingid`) and maintained instance state.
   * Added `dependsOnMethods` to guarantee ordered execution within parallel classes.
 * **Suite Descriptor Alignment**: Cleaned up `testng.xml`, `testng_reg.xml`, and `testng_E2E.xml` to include proper suite hierarchies, preserved method ordering, and comprehensive class registrations.
+* **Defensive Security Suite Added**: Created `SecurityTests` (8 tests) covering missing/invalid auth tokens, invalid/empty credentials, unsupported content types, and `LogSanitizer` regex masking. Registered across `testng.xml` and `testng_reg.xml`.
 
-### 1.5 CI/CD Pipelines (`.github/workflows/ci.yml`)
-* **Pipeline Quality Gate**: Removed `continue-on-error: true` from `ci.yml` so that genuine test failures properly break the CI build and trigger alerts.
+### 1.5 CI/CD Pipelines & Containerization (`.github/workflows/`, `Dockerfile`)
+* **Pipeline Quality Gate**: Removed `continue-on-error: true` from `ci.yml` and `regression.yml` so genuine failures strictly enforce quality gates.
+* **Ephemeral Container Support**: Added `Dockerfile` and `.dockerignore` enabling standalone, isolated execution across any containerized runner.
+
+### 1.6 Compiler & IDE Diagnostics Alignment
+* **Java 21 LTS Standard**: Aligned `pom.xml` compiler source, target, and `<release>21</release>`, eliminating JDK module location warnings and resolving Eclipse JDT LS build path mismatches.
+* **Language Server Cleanliness**: Cleaned unused imports in `SecurityTests.java` and `ProductAPITests.java`, added `@SuppressWarnings("rawtypes")` to `RetryListener.transform`, added factory methods to `AuthenticationFactory`, and configured `.vscode/settings.json` for automatic Maven sync, achieving **0 IDE compile problems** across all files.
 
 ---
 
@@ -44,10 +50,12 @@ This document records the architectural improvements, security hardening, bug fi
 
 | Feature / Area | Before Modernization | After Modernization |
 | :--- | :--- | :--- |
-| **Default `mvn test`** | Failed: Suite file not found (`${suiteXmlFile}`) | Passes: Executes `testng.xml` with zero extra flags |
+| **Default `mvn test`** | Failed: Suite file not found (`${suiteXmlFile}`) | Passes: Executes `testng.xml` (27 passed) with zero extra flags |
 | **Authentication Flow** | Failed: Invalid credentials caused 403 on updates/deletes | Passes: Authentic credentials & dynamic tokens |
 | **Password Decoding** | Corrupted plaintext passwords via heuristic Base64 check | Safe: Explicit `base64:` prefix standard |
 | **Checkstyle Violations** | 4,349 violations (failing check) | **0 violations (BUILD SUCCESS)** |
+| **Compiler & IDE Diagnostics** | Module warnings & 20 Eclipse JDT LS resolution errors | **0 errors, 0 warnings (Java 21 LTS release mode)** |
+| **Defensive Security Tests** | 0 security test cases | **8 comprehensive security tests integrated into CI** |
 | **Parallel Execution** | Race conditions & `ITestContext` state collisions | Isolated class parallelism, namespaced context, ThreadLocal ExtentTest |
 | **Failure Attachments** | Plaintext response bodies attached to Allure | Sanitized bodies via `LogSanitizer` (redacted tokens/passwords) |
 | **CI/CD Quality Gate** | `continue-on-error: true` masked failures | Enforced quality gate: PR breaks on genuine failure |
@@ -59,9 +67,11 @@ This document records the architectural improvements, security hardening, bug fi
 
 | Test Suite | Total Tests | Passed | Failed | Skipped | Pass Rate |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **`testng.xml` (Default)** | 19 | 19 | 0 | 0 | **100%** |
+| **`testng.xml` (Default Suite)** | 27 | 27 | 0 | 0 | **100%** |
+| **`testng_reg.xml` (Regression Suite)** | 15 | 15 | 0 | 0 | **100%** |
 | **`testng_parallel.xml`** | 15 | 15 | 0 | 0 | **100%** |
-| **`testng_reg.xml` (Regression)** | 7 | 7 | 0 | 0 | **100%** |
 | **`testng_E2E.xml` (End-to-End)** | 8 | 8 | 0 | 0 | **100%** |
+| **`SecurityTests` (Defensive Suite)** | 8 | 8 | 0 | 0 | **100%** |
 | **`testng_retry_check.xml`** | 1 | 1 | 0 | 0 | **100%** |
 | **Checkstyle Validation** | - | - | 0 violations | - | **100%** |
+| **IDE Language Server Problems** | - | - | 0 problems | - | **100%** |

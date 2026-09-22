@@ -6,7 +6,7 @@ This guide covers all options for running, configuring, and analyzing tests loca
 
 ## 1. Prerequisites
 
-* **Java Development Kit**: JDK 21+ (Tested with JDK 22 and JDK 25 LTS).
+* **Java Development Kit**: JDK 21 LTS standard (`--release 21`). Verified and tested with both JDK 21 LTS and JDK 25 LTS.
 * **Build Tool**: Maven 3.9+ or use the included Maven Wrapper (`./mvnw` or `mvnw.cmd`).
 * **Allure CLI** (Optional, for local HTML report viewing): `npm install -g allure-commandline` or `scoop install allure`.
 
@@ -32,24 +32,33 @@ mvnw.cmd test
 ### 2.2 Selecting a Specific TestNG Suite
 Use `-DsuiteXmlFile=<filename>` to run specific test suites:
 
-| Suite File | Description | Recommended Usage |
-| :--- | :--- | :--- |
-| **`testng.xml`** | Default mixed suite (E2E flows + CRUD tests) | Nightly builds and baseline runs |
-| **`testng_parallel.xml`** | High-concurrency parallel suite (classes + methods) | Fast pull request validations |
-| **`testng_reg.xml`** | Complete regression suite (all CRUD + Integration) | Release qualification and scheduled regressions |
-| **`testng_E2E.xml`** | Dedicated end-to-end integration workflows | Critical business path verification |
-| **`testng_retry_check.xml`** | Flakiness and retry verification suite | Validating test retry analyzer logic |
+| Suite File | Description | Test Count | Recommended Usage |
+| :--- | :--- | :---: | :--- |
+| **`testng.xml`** | Default mixed suite (E2E flows + CRUD + Security) | 27 | Nightly builds and baseline runs |
+| **`testng_parallel.xml`** | High-concurrency parallel suite (classes + methods) | 15 | Fast pull request validations |
+| **`testng_reg.xml`** | Complete regression suite (all CRUD + Integration + Security) | 15 | Release qualification and scheduled regressions |
+| **`testng_E2E.xml`** | Dedicated end-to-end integration workflows | 8 | Critical business path verification |
+| **`testng_retry_check.xml`** | Flakiness and retry verification suite | 1 | Validating test retry analyzer logic |
+
+> [!NOTE]
+> **PowerShell Parameter Quoting**: In Windows PowerShell, CLI arguments containing `=` must be enclosed in quotes:
+> ```powershell
+> .\mvnw.cmd test "-DsuiteXmlFile=testng_reg.xml"
+> ```
 
 Examples:
 ```bash
-# Run the parallel suite
-mvnw.cmd test -DsuiteXmlFile=testng_parallel.xml
+# Run the complete regression suite (15 tests)
+mvnw.cmd test "-DsuiteXmlFile=testng_reg.xml"
 
-# Run the complete regression suite
-mvnw.cmd test -DsuiteXmlFile=testng_reg.xml
+# Run dedicated defensive security tests (8 tests)
+mvnw.cmd test -Dtest=SecurityTests
+
+# Run the parallel suite
+mvnw.cmd test "-DsuiteXmlFile=testng_parallel.xml"
 
 # Run dedicated E2E flows
-mvnw.cmd test -DsuiteXmlFile=testng_E2E.xml
+mvnw.cmd test "-DsuiteXmlFile=testng_E2E.xml"
 ```
 
 ### 2.3 Environment Selection
