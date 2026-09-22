@@ -97,6 +97,44 @@ public class AuthenticationFactory {
     }
 
     /**
+     * Creates and returns an API Key authentication handler
+     *
+     * @param apiKey API key value
+     * @return Configured IAuthHandler
+     */
+    public static IAuthHandler getApiKeyAuthHandler(String apiKey) {
+        ApiKeyAuthHandler handler = new ApiKeyAuthHandler();
+        handler.setApiKey(apiKey);
+        return handler;
+    }
+
+    /**
+     * Creates and returns an API Key authentication handler with custom header name
+     *
+     * @param apiKey API key value
+     * @param headerName Custom header name (e.g. "X-API-Key")
+     * @return Configured IAuthHandler
+     */
+    public static IAuthHandler getApiKeyAuthHandler(String apiKey, String headerName) {
+        ApiKeyAuthHandler handler = new ApiKeyAuthHandler();
+        handler.setApiKey(apiKey);
+        handler.setHeaderName(headerName);
+        return handler;
+    }
+
+    /**
+     * Creates and returns a Bearer Token authentication handler
+     *
+     * @param token Bearer token string
+     * @return Configured IAuthHandler
+     */
+    public static IAuthHandler getBearerTokenHandler(String token) {
+        BearerTokenHandler handler = new BearerTokenHandler();
+        handler.setToken(token);
+        return handler;
+    }
+
+    /**
      * Interface for all authentication handlers
      */
     public interface IAuthHandler {

@@ -3,7 +3,6 @@ package com.prasad_v.tests.api;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.validation.ResponseTimeValidator;
 import com.prasad_v.validation.ResponseValidator;
-import com.prasad_v.validation.SchemaValidator;
 import com.prasad_v.testdata.JsonDataProvider;
 import com.prasad_v.requestbuilder.RequestBuilder;
 import com.prasad_v.constants.APIConstants;
