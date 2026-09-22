@@ -42,7 +42,10 @@ build/
 .env.local
 .env.*
 !.env.example
+*.local.properties
+local.properties
 *.jks
+*.keystore
 *.p12
 *.pem
 *.key

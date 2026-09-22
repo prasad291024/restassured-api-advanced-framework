@@ -9,45 +9,67 @@ package com.prasad_v.tests.integration;
         ✔ Validate update fails with 405 (Method Not Allowed) or 404 (Not Found).
 */
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import com.prasad_v.builders.BookingBuilder;
+import com.prasad_v.constants.APIConstants;
+import com.prasad_v.pojos.Booking;
+import com.prasad_v.tests.base.BaseTest;
+import com.prasad_v.utils.RestUtils;
+import io.qameta.allure.Description;
+import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import static io.restassured.RestAssured.*;
 
-public class E2ETest_Assignment4 {
-    private static final String BASE_URL = "https://restful-booker.herokuapp.com";
+public class E2ETest_Assignment4 extends BaseTest {
 
-    @Test
+    public int createBooking() {
+        Booking booking = new BookingBuilder()
+                .withFirstname("James")
+                .withLastname("Bond")
+                .withTotalprice(250)
+                .withDepositpaid(true)
+                .withCheckin("2025-05-01")
+                .withCheckout("2025-05-05")
+                .withAdditionalneeds("Martini")
+                .build();
+
+        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
+        Response createResponse = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString(booking));
+        Assert.assertEquals(createResponse.statusCode(), 200, "Create booking failed");
+
+        return createResponse.jsonPath().getInt("bookingid");
+    }
+
+    @Test(groups = {"reg", "e2e"})
+    @Owner("Prasad")
+    @Description("Assignment 4: Create Booking -> Delete it -> Try to Update deleted booking -> Expect 405 or 404")
     public void testDeleteThenTryToUpdateBooking() {
-        int bookingId = 100;  // Provide an existing booking ID
-        String token = "2c4a5606ad3dc3b";
+        int bookingId = createBooking();
+        String token = getToken();
+        Assert.assertNotNull(token, "Authentication token should not be null");
 
         // Delete the booking
-        given()
-                .baseUri(BASE_URL)
-                .basePath("/booking/" + bookingId)
-                .header("Cookie", "token=" + token)
-                .when()
-                .delete()
-                .then()
-                .log().all()
-                .statusCode(201);
+        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId);
+        Response deleteResponse = RestUtils.delete(requestSpecification, token);
+        Assert.assertEquals(deleteResponse.statusCode(), 201, "Delete booking failed");
 
         // Try to update the deleted booking
-        String updateRequestBody = "{ \"firstname\": \"James\", \"lastname\": \"Bond\" }";
+        Booking updateBooking = new BookingBuilder()
+                .withFirstname("James")
+                .withLastname("Bond")
+                .withTotalprice(300)
+                .withDepositpaid(true)
+                .withCheckin("2025-05-01")
+                .withCheckout("2025-05-05")
+                .withAdditionalneeds("Shaken not stirred")
+                .build();
 
-        given()
-                .baseUri(BASE_URL)
-                .basePath("/booking/" + bookingId)
-                .header("Cookie", "token=" + token)
-                .contentType(ContentType.JSON)
-                .body(updateRequestBody)
-                .when()
-                .put()
-                .then()
-                .log().all()
-                .statusCode(405);
+        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId);
+        Response updateResponse = RestUtils.put(requestSpecification, payloadManager.createPayloadBookingAsString(updateBooking), token);
+
+        // Restful-booker returns 405 Method Not Allowed when updating a non-existent/deleted resource
+        int statusCode = updateResponse.statusCode();
+        Assert.assertTrue(statusCode == 405 || statusCode == 404,
+                "Expected status code 405 or 404 on deleted booking update, but got: " + statusCode);
     }
 }

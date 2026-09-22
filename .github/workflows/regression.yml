@@ -35,7 +35,6 @@ jobs:
 
       - name: Run Regression Suite
         run: ./mvnw -B test -DsuiteXmlFile=testng_reg.xml -Denv=dev
-        continue-on-error: true
 
       - name: Generate Allure Report
         if: always()

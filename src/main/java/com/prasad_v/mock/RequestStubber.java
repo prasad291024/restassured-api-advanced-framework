@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.matchers.TimeToLive;
 import org.mockserver.matchers.Times;
-import org.mockserver.model.Body;
 import org.mockserver.model.Cookie;
 import org.mockserver.model.Delay;
 import org.mockserver.model.Header;

@@ -3,12 +3,8 @@ package com.prasad_v.logging;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class CustomLogger {
     private final Logger logger;
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public CustomLogger(Class<?> clazz) {
         this.logger = LogManager.getLogger(clazz);
@@ -61,9 +57,6 @@ public class CustomLogger {
     }
 
     private String formatMessage(String message) {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        String timestamp = sdf.format(new Date());
-        String threadName = Thread.currentThread().getName();
-        return String.format("[%s] [%s] %s", timestamp, threadName, message);
+        return LogSanitizer.sanitize(message);
     }
 }

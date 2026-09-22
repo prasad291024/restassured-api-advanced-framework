@@ -14,8 +14,14 @@
         </groups>
 
         <classes>
-            <class name="com.prasad_v.tests.crud.TestCreateBooking">
-            </class>
+            <class name="com.prasad_v.tests.crud.TestCreateBooking"/>
+            <class name="com.prasad_v.tests.crud.TestCreateToken"/>
+            <class name="com.prasad_v.tests.crud.TestHealthCheck"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment1"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment2"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment3"/>
+            <class name="com.prasad_v.tests.integration.E2ETest_Assignment4"/>
+            <class name="com.prasad_v.tests.security.SecurityTests"/>
         </classes>
     </test>
 </suite>

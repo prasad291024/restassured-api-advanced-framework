@@ -107,9 +107,7 @@ public class JsonDataProvider {
             // Handle nested objects
             if (value instanceof JSONObject) {
                 value = jsonObjectToMap((JSONObject) value);
-            }
-            // Handle nested arrays
-            else if (value instanceof JSONArray) {
+            } else if (value instanceof JSONArray) { // Handle nested arrays
                 JSONArray jsonArray = (JSONArray) value;
                 List<Object> list = new ArrayList<>();
 

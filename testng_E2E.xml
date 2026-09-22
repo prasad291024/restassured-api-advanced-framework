@@ -9,18 +9,13 @@
     <!-- This test suite includes two test classes:
          TestE2EFlow_01.java and TestE2EFlow_02.java
     -->
-    <test name="Booking E2E Tests">
-        <packages>
-            <package name="com.prasad_v.tests.integration">
-                <classes>
-                    <!-- First End-to-End test: Create -> Update -> Delete -->
-                    <class name="com.prasad_v.tests.integration.TestE2EFlow_01"/>
-
-                    <!-- Second E2E test: Create -> Delete -> Verify Deletion -->
-                    <class name="com.prasad_v.tests.integration.TestE2EFlow_02"/>
-                </classes>
-            </package>
-        </packages>
+    <test name="Booking E2E Tests" preserve-order="true">
+        <classes>
+            <!-- First End-to-End test: Create -> Update -> Delete -->
+            <class name="com.prasad_v.tests.integration.TestE2EFlow_01"/>
+            <!-- Second E2E test: Create -> Delete -> Verify Deletion -->
+            <class name="com.prasad_v.tests.integration.TestE2EFlow_02"/>
+        </classes>
     </test>
 
 </suite>

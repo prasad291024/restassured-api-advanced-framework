@@ -21,33 +21,35 @@ public class SecureConfigManager {
         return instance;
     }
 
-    /**
-     * Get credential from environment variable first, fallback to config file
-     */
     public String getSecureProperty(String key) {
+        if (key == null) {
+            return null;
+        }
+        String sysProp = System.getProperty(key);
+        if (sysProp != null && !sysProp.isBlank()) {
+            return sysProp;
+        }
         String envKey = key.toUpperCase().replace(".", "_");
         String envValue = System.getenv(envKey);
-        return envValue != null ? envValue : configManager.getProperty(key);
+        return envValue != null && !envValue.isBlank() ? envValue : configManager.getProperty(key);
     }
 
     /**
-     * Get decoded credential (if base64 encoded in env)
+     * Get decoded credential (if prefixed with base64:)
      */
     public String getDecodedProperty(String key) {
         String value = getSecureProperty(key);
-        if (value != null && isBase64Encoded(value)) {
-            return new String(Base64.getDecoder().decode(value));
+        if (value == null || value.isBlank()) {
+            return value;
+        }
+        if (value.startsWith("base64:")) {
+            try {
+                return new String(Base64.getDecoder().decode(value.substring(7).trim()));
+            } catch (IllegalArgumentException ignored) {
+                return value;
+            }
         }
         return value;
-    }
-
-    private boolean isBase64Encoded(String value) {
-        try {
-            Base64.getDecoder().decode(value);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
     }
 
     public String getUsername() {
