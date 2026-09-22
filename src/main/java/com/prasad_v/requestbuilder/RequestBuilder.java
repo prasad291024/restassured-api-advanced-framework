@@ -78,6 +78,10 @@ public class RequestBuilder {
                 .defaultContentCharset("UTF-8");
 
         LogConfig logConfig = new LogConfig()
+                .blacklistHeader("Authorization")
+                .blacklistHeader("Cookie")
+                .blacklistHeader("token")
+                .blacklistHeader("X-API-Key")
                 .enableLoggingOfRequestAndResponseIfValidationFails(LogDetail.ALL);
 
         RestAssuredConfig config = RestAssured.config()

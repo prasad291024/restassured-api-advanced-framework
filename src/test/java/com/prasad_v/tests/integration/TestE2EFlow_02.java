@@ -22,117 +22,87 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestE2EFlow_02 extends BaseTest {
 
-    /**
-     * Step 1: Create a Booking
-     * - Sends POST request
-     * - Extracts and stores booking ID
-     */
+    private Integer bookingId;
+    private String token;
+
     @Test(priority = 1)
     @Owner("Prasad")
     @Description("TC#E2E2 - Step 1: Create a booking and store booking ID")
     public void createBooking(ITestContext context) {
-        // Setting the API endpoint path for creating a booking
+        requestSpecification = createRequestSpec();
         requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
 
-        // Sending a POST request with the booking payload
         response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
-
-        // Logging response and validating HTTP status code
         validatableResponse = response.then().log().all();
-        validatableResponse.statusCode(200); // Expecting 200 OK on successful creation
+        validatableResponse.statusCode(200);
 
-        // Deserialize the response JSON into a BookingResponse Java object
         BookingResponse bookingResponse = payloadManager.bookingResponseJava(response.asString());
-
-        // Validate first name is 'Prasad' and booking ID is not null
         assertActions.verifyStringKey(bookingResponse.getBooking().getFirstname(), "Prasad");
         assertActions.verifyStringKeyNotNull(bookingResponse.getBookingid());
 
-        // Store booking ID in TestNG context for use in other test methods
-        context.setAttribute("bookingid", bookingResponse.getBookingid());
+        this.bookingId = bookingResponse.getBookingid();
+        context.setAttribute("flow2_bookingid", this.bookingId);
     }
 
-
-    /**
-     * Step 2: Verify Booking was Created
-     * - Sends GET request to check booking exists
-     */
-    @Test(priority = 2)
+    @Test(priority = 2, dependsOnMethods = "createBooking")
     @Owner("Prasad")
     @Description("TC#E2E2 - Step 2: Verify booking by ID exists after creation")
     public void verifyBooking(ITestContext context) {
+        if (bookingId == null) {
+            bookingId = (Integer) context.getAttribute("flow2_bookingid");
+        }
+        assertThat(bookingId).isNotNull();
 
-        // Retrieve booking ID from TestNG context
-        Integer bookingId = (Integer) context.getAttribute("bookingid");
-
-        // Construct the GET path to fetch specific booking
+        requestSpecification = createRequestSpec();
         String getPath = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
         requestSpecification.basePath(getPath);
 
-        // Send GET request to fetch the booking
         response = RestUtils.get(requestSpecification);
-
-        // Log and validate response
         validatableResponse = response.then().log().all();
-        validatableResponse.statusCode(200); // Expecting 200 OK
+        validatableResponse.statusCode(200);
 
-        // Convert JSON response into Booking Java object
         Booking booking = payloadManager.getResponseFromJSON(response.asString());
-
-        // Validate that first name is present and not blank
         assertThat(booking.getFirstname()).isNotBlank();
     }
 
-
-    /**
-     * Step 3: Delete the Booking
-     * - Requires authentication token
-     */
-    @Test(priority = 3)
+    @Test(priority = 3, dependsOnMethods = "createBooking")
     @Owner("Prasad")
     @Description("TC#E2E2 - Step 3: Delete the booking using token")
     public void deleteBooking(ITestContext context) {
-        // Get booking ID from context
-        Integer bookingId = (Integer) context.getAttribute("bookingid");
+        if (bookingId == null) {
+            bookingId = (Integer) context.getAttribute("flow2_bookingid");
+        }
+        assertThat(bookingId).isNotNull();
 
-        // Generate token and store it for later use
-        String token = getToken();
-        context.setAttribute("token", token);
+        if (token == null) {
+            token = getToken();
+        }
+        context.setAttribute("flow2_token", token);
 
-        // Build the DELETE path for the specific booking ID
+        requestSpecification = createRequestSpec();
         String deletePath = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-
-        // Set base path and attach token in request cookie
         requestSpecification.basePath(deletePath);
 
-        // Send DELETE request to remove the booking
         response = RestUtils.delete(requestSpecification, token);
         validatableResponse = response.then().log().all();
-
-        // Verify that deletion was successful
-        validatableResponse.statusCode(201); // Expecting 201 Created → deletion success in this API
+        validatableResponse.statusCode(201);
     }
 
-    /**
-     * Step 4: Verify Booking is Deleted
-     * - Expects 404 when accessing deleted booking
-     */
-    @Test(priority = 4)
+    @Test(priority = 4, dependsOnMethods = "deleteBooking")
     @Owner("Prasad")
     @Description("TC#E2E2 - Step 4: Verify booking no longer exists")
     public void verifyBookingDeleted(ITestContext context) {
-        // Retrieve booking ID from context
-        Integer bookingId = (Integer) context.getAttribute("bookingid");
+        if (bookingId == null) {
+            bookingId = (Integer) context.getAttribute("flow2_bookingid");
+        }
+        assertThat(bookingId).isNotNull();
 
-        // Build GET request path for deleted booking
+        requestSpecification = createRequestSpec();
         String getPath = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
         requestSpecification.basePath(getPath);
 
-        // Send GET request
         response = RestUtils.get(requestSpecification);
         validatableResponse = response.then().log().all();
-
-        // Verify booking is no longer found (404 Not Found)
         validatableResponse.statusCode(404);
     }
 }

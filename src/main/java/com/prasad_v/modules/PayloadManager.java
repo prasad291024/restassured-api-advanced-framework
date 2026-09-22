@@ -49,6 +49,10 @@ public class PayloadManager {
         return gson.toJson(auth);
     }
 
+    public String setAuthPayload(Auth auth) {
+        return gson.toJson(auth);
+    }
+
     public String getTokenFromJSON(String tokenResponse) {
         TokenResponse response = gson.fromJson(tokenResponse, TokenResponse.class);
         return response.getToken();

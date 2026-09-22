@@ -28,6 +28,7 @@ public class BaseTest {
     public JsonPath jsonPath;
     public Response response;
     public ValidatableResponse validatableResponse;
+    public com.prasad_v.services.BookingService bookingService;
 
     @BeforeSuite(alwaysRun = true)
     public void initEnvironment() {
@@ -39,8 +40,13 @@ public class BaseTest {
         config = ConfigurationManager.getInstance();
         payloadManager = new PayloadManager();
         assertActions = new AssertActions();
+        bookingService = new com.prasad_v.services.BookingService();
+        requestSpecification = createRequestSpec();
+    }
+
+    public RequestSpecification createRequestSpec() {
         String baseUrl = config.getProperty("api.base.url", APIConstants.BASE_URL);
-        requestSpecification = new RequestSpecBuilder()
+        return new RequestSpecBuilder()
                 .setBaseUri(baseUrl)
                 .addHeader("Content-Type", "application/json")
                 .addFilter(new RequestResponseInterceptor())
@@ -49,8 +55,13 @@ public class BaseTest {
 
     public String getToken() {
         String baseUrl = config.getProperty("api.base.url", APIConstants.BASE_URL);
-        requestSpecification.baseUri(baseUrl).basePath(APIConstants.AUTH_URL).contentType(ContentType.JSON);
-        response = RestUtils.post(requestSpecification, payloadManager.setAuthPayload());
-        return payloadManager.getTokenFromJSON(response.asString());
+        RequestSpecification authSpec = new RequestSpecBuilder()
+                .setBaseUri(baseUrl)
+                .setBasePath(APIConstants.AUTH_URL)
+                .setContentType(ContentType.JSON)
+                .addFilter(new RequestResponseInterceptor())
+                .build();
+        Response authResponse = RestUtils.post(authSpec, payloadManager.setAuthPayload());
+        return payloadManager.getTokenFromJSON(authResponse.asString());
     }
 }

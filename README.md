@@ -1,97 +1,147 @@
-# API Automation RestAssured (in Java)
+# API Automation REST Assured Framework (Java)
 
-#### Author - Prasad Valiv
+#### Author: Prasad Valiv
+[![Java](https://img.shields.io/badge/Java-21%20LTS-orange.svg)](https://openjdk.org/)
+[![REST Assured](https://img.shields.io/badge/REST%20Assured-5.5.5-green.svg)](https://rest-assured.io/)
+[![TestNG](https://img.shields.io/badge/TestNG-7.11.0-blue.svg)](https://testng.org/)
+[![Checkstyle](https://img.shields.io/badge/Checkstyle-0%20Violations-brightgreen.svg)](checkstyle.xml)
+[![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](pom.xml)
 
-API Automation Framework for CRUD and end-to-end API workflows.
+Production-grade, modular, and secure REST Assured API automation testing framework built for high performance, maintainability, parallel execution, and strict CI/CD quality gates.
 
-## Quick Start
+---
 
-- Linux/macOS: `./mvnw test -DsuiteXmlFile=testng.xml -Denv=dev`
-- Windows: `mvnw.cmd test -DsuiteXmlFile=testng.xml -Denv=dev`
+## ⚡ Quick Start
 
-## Tech Stack
+Execute the default test suite (27 tests) immediately without configuring parameters:
 
-1. Java (JDK 22)
-2. Rest Assured + TestNG
-3. Apache POI
-4. AssertJ
-5. Jackson + Gson
-6. Log4j2
-7. Allure + Extent Reports
-8. Maven Wrapper
-9. Jenkins Pipeline
+```bash
+# Windows
+mvnw.cmd test
 
-## Runbook
+# Linux / macOS
+./mvnw test
+```
 
-### Compile
+Run dedicated defensive security and authentication boundary tests:
+```bash
+mvnw.cmd test -Dtest=SecurityTests
+```
 
-- Linux/macOS: `./mvnw clean compile`
-- Windows: `mvnw.cmd clean compile`
+> [!NOTE]
+> **PowerShell Users**: On Windows PowerShell, quote arguments containing `=` (e.g. `.\mvnw.cmd test "-DsuiteXmlFile=testng_reg.xml"`).
 
-### Test Suites
+---
 
-- Full suite: `./mvnw test -DsuiteXmlFile=testng.xml -Denv=dev`
-- Parallel suite: `./mvnw test -DsuiteXmlFile=testng_parallel.xml -Denv=dev`
-- Regression suite: `./mvnw test -DsuiteXmlFile=testng_reg.xml -Denv=dev`
-- E2E suite: `./mvnw test -DsuiteXmlFile=testng_E2E.xml -Denv=dev`
+## 🛠️ Technology Stack
 
-### Retry Listener Verification
+* **Language**: Java 21 LTS (`--release 21`, verified across JDK 21 LTS & JDK 25 LTS runtimes)
+* **Core API Client**: REST Assured 5.5.5
+* **Test Runner**: TestNG 7.11.0 (with ThreadLocal parallel execution & `RetryAnalyzer`)
+* **Serialization & Data**: Jackson 2.19.0, Gson 2.12.1, Java Faker 1.0.2, Apache POI 5.4.0
+* **Assertions**: AssertJ 3.27.3, TestNG assertions
+* **Observability & Logging**: Log4j2 2.24.3, CustomLogger, comprehensive `LogSanitizer`
+* **Reporting**: Allure 2.29.1, ExtentReports 5.1.2 (ThreadLocal)
+* **Static Analysis**: Checkstyle 3.4.0 (0 violations), SpotBugs 4.8.6.5
+* **Mock Virtualization**: MockServer 5.15.0
+* **CI/CD & Containers**: GitHub Actions, Jenkinsfile, Dockerfile
 
-- `./mvnw test -DsuiteXmlFile=testng_retry_check.xml -Denv=dev`
+---
 
-Expected behavior:
-- First attempt fails intentionally.
-- Retry listener triggers rerun.
-- Second attempt passes.
+## 📚 Complete Documentation Suite
 
-## Reports
+All detailed architectural, operational, and security guides are located in the [docs/](docs/) folder:
 
-### Allure
+| Document | Description |
+| :--- | :--- |
+| **[Architecture & Design Guide](docs/architecture.md)** | Multi-tier abstraction layers, design patterns, component relationships, and package layout. |
+| **[Test Execution Guide & Runbook](docs/execution-guide.md)** | Suite options, CLI parameter overrides, environment switching, and reporting commands. |
+| **[Security & Secret Management Guide](docs/security.md)** | Credential resolution hierarchy, Base64 prefix format, and automated log/report sanitization. |
+| **[Comprehensive Security Audit Report](docs/security-audit.md)** | 11-point security audit findings, CVE analysis, risk classification, and remediation details. |
+| **[Parallel Execution Architecture](docs/PARALLEL_EXECUTION.md)** | Thread pool configuration, suite parallelization strategies, and state isolation mechanics. |
+| **[CI/CD Workflows](docs/CI_CD_WORKFLOWS.md)** | GitHub Actions pipelines, quality gate enforcement, caching strategies, and Allure deployment. |
+| **[Troubleshooting & Debugging Guide](docs/troubleshooting.md)** | Diagnostic steps for HTTP status codes (403, 404, 405, 503), parallel collisions, and IDE issues. |
+| **[Modernization & Improvement Log](docs/improvement-log.md)** | Chronological log of refactorings, before-vs-after comparisons, and test execution metrics. |
+| **[Architecture & Evolution Roadmap](docs/plan.md)** | Multi-phase strategic roadmap from foundation hardening to virtualization and security maturity. |
 
-- Serve report: `allure serve allure-results`
-- Generate static report: `allure generate allure-results --clean -o allure-report`
+---
 
-### CI Verify Command
+## 🧪 Test Suites & Execution Matrix
 
-- `./mvnw verify -DsuiteXmlFile=testng.xml -Denv=dev`
+| Suite File | Description | Test Count | Recommended Usage | Command |
+| :--- | :--- | :---: | :--- | :--- |
+| **`testng.xml`** | Default mixed suite (E2E flows + CRUD + Security) | 27 | Baseline runs & nightly builds | `mvnw.cmd test` |
+| **`testng_reg.xml`** | Complete regression suite (all CRUD + Integration + Security) | 15 | Release qualification | `mvnw.cmd test "-DsuiteXmlFile=testng_reg.xml"` |
+| **`testng_parallel.xml`** | Multi-threaded parallel suite (classes + methods) | 15 | Fast pull request validations | `mvnw.cmd test "-DsuiteXmlFile=testng_parallel.xml"` |
+| **`SecurityTests`** | Authorization boundaries, bad credentials & sanitization | 8 | Security regression gate | `mvnw.cmd test -Dtest=SecurityTests` |
+| **`testng_E2E.xml`** | Dedicated end-to-end integration workflows | 8 | Core business journey tests | `mvnw.cmd test "-DsuiteXmlFile=testng_E2E.xml"` |
+| **`testng_retry_check.xml`** | Transient failure & retry listener verification | 1 | Testing retry behavior | `mvnw.cmd test "-DsuiteXmlFile=testng_retry_check.xml"` |
 
-## CI/CD
+---
 
-The framework includes three automated workflows:
+## 🔒 Security & Data Masking Highlights
 
-1. **API Framework CI** - Runs on push/PR with matrix strategy
-2. **Publish Allure Report** - Deploys reports to GitHub Pages
-3. **Scheduled Regression** - Daily automated regression tests
+1. **Zero Hardcoded Secrets**: All environment configurations strictly use dynamic properties and environment variable syntax (`${DEV_AUTH_USERNAME:admin}`, `${DEV_AUTH_PASSWORD:password123}`).
+2. **Explicit Base64 Prefixing**: Standardized on `base64:<encoded-string>` prefix to prevent corrupted plaintext passwords.
+3. **Automated Redaction (`LogSanitizer`)**: Real-time regex scrubbing of passwords, authorization headers, session cookies, Bearer tokens, query parameters, credit card numbers, and SSNs across both logs and Allure report attachments.
+4. **Header Blacklisting**: RestAssured internal `LogConfig` blacklists sensitive headers (`Authorization`, `Cookie`, `token`, `X-API-Key`) as `[BLACK-LISTED]`.
+5. **Strict TLS Enforcement**: HTTPS enforcement with standard JVM TLS verification enabled across all environments.
 
-See [CI/CD Workflows Documentation](docs/CI_CD_WORKFLOWS.md) for details.
+---
 
-### Jenkins Pipeline
+## 📊 Test Reporting
 
-The pipeline file is available at `Jenkinsfile`.
-Use the `ENV` and `SUITE` parameters to select target environment and suite XML.
+### Allure Reports
+Allure results are automatically generated in `allure-results/`:
+```bash
+# Serve interactive report in browser
+allure serve allure-results
 
-## Environment Governance
+# Build standalone HTML report bundle
+allure generate allure-results --clean -o target/allure-report
+```
 
-For `qa` and `prod`, framework startup now validates configuration and fails fast if:
-- URLs are missing or still use placeholder domains (like `example.com`)
-- Required auth values are missing
+### ExtentReports
+Interactive HTML dashboards are automatically produced after every run:
+* **Location**: `test-output/ExtentReports/API-Automation-Report_<timestamp>.html`
 
-### Required Variables
+---
 
-QA:
-- `AUTH_CLIENT_ID`
-- `AUTH_CLIENT_SECRET`
-- `AUTH_USERNAME`
-- `AUTH_PASSWORD`
+## 🔍 Code Quality & Static Analysis
 
-PROD:
-- `PROD_CLIENT_ID`
-- `PROD_CLIENT_SECRET`
-- `PROD_API_USERNAME`
-- `PROD_API_PASSWORD`
+```bash
+# Run Checkstyle audit (enforces 0 violations)
+mvnw.cmd checkstyle:check
 
-Optional SSL:
-- `SSL_KEYSTORE_PASSWORD` (qa)
-- `PROD_KEYSTORE_PASSWORD` (prod)
+# Generate HTML Checkstyle report
+mvnw.cmd checkstyle:checkstyle
 
-Use `.env.example` as the template for your local/CI secret setup.
+# Run SpotBugs static analysis
+mvnw.cmd spotbugs:check
+```
+
+---
+
+## 🐳 Docker Execution
+
+Run tests inside an isolated containerized environment:
+
+```bash
+# Build the Docker image
+docker build -t restassured-framework .
+
+# Run the default test suite
+docker run --rm restassured-framework
+
+# Run the regression suite with custom environment
+docker run --rm restassured-framework mvn test "-DsuiteXmlFile=testng_reg.xml" -Denv=dev
+```
+
+---
+
+## 🔄 CI/CD Automation
+
+Three automated GitHub Actions workflows are included in `.github/workflows/`:
+1. **API Framework CI (`ci.yml`)**: Triggered on push/PR with strict quality gates (failures break the build).
+2. **Publish Allure Report (`publish-report.yml`)**: Deploys Allure HTML reports to GitHub Pages.
+3. **Scheduled Regression (`regression.yml`)**: Runs `testng_reg.xml` on a daily schedule at 2 AM UTC.

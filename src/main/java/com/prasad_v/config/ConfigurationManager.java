@@ -78,6 +78,13 @@ public class ConfigurationManager {
      * @return Property value or null if not found
      */
     public String getProperty(String key) {
+        if (key == null) {
+            return null;
+        }
+        String sysProp = System.getProperty(key);
+        if (sysProp != null && !sysProp.isBlank()) {
+            return sysProp;
+        }
         return resolveEnvPlaceholder(properties.getProperty(key));
     }
 
@@ -185,9 +192,16 @@ public class ConfigurationManager {
 
     private String resolveEnvPlaceholder(String value) {
         if (value != null && value.startsWith("${") && value.endsWith("}")) {
-            String envKey = value.substring(2, value.length() - 1);
+            String placeholder = value.substring(2, value.length() - 1);
+            String envKey = placeholder;
+            String defaultValue = "";
+            int colonIndex = placeholder.indexOf(':');
+            if (colonIndex != -1) {
+                envKey = placeholder.substring(0, colonIndex);
+                defaultValue = placeholder.substring(colonIndex + 1);
+            }
             String envValue = System.getenv(envKey);
-            return envValue == null ? "" : envValue;
+            return envValue != null && !envValue.isBlank() ? envValue : defaultValue;
         }
         return value;
     }

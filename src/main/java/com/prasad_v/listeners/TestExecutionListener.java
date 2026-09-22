@@ -1,5 +1,6 @@
 package com.prasad_v.listeners;
 
+import com.prasad_v.logging.LogSanitizer;
 import com.prasad_v.reporting.ExtentReportManager;
 import com.prasad_v.reporting.ExtentTestManager;
 import io.qameta.allure.Allure;
@@ -71,8 +72,9 @@ public class TestExecutionListener implements ITestListener {
             responseField.setAccessible(true);
             Object value = responseField.get(instance);
             if (value instanceof Response response) {
-                Allure.addAttachment("Failure Response Body", "application/json", response.asString());
-                ExtentTestManager.logInfo("Attached response body for failed test.");
+                String sanitizedBody = LogSanitizer.sanitizeBody(response.asString());
+                Allure.addAttachment("Failure Response Body", "application/json", sanitizedBody);
+                ExtentTestManager.logInfo("Attached sanitized response body for failed test.");
             }
         } catch (Exception ignored) {
             ExtentTestManager.logWarning("Could not attach response body from failed test instance.");

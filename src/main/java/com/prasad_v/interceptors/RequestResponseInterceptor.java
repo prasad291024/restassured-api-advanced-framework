@@ -36,9 +36,13 @@ public class RequestResponseInterceptor implements Filter {
         
         logger.logRequest(uri, method, requestHeaders, requestBody);
         
-        // Attach to Allure
+        // Attach sanitized request to Allure
         Allure.addAttachment("Request", "text/plain", 
-            String.format("%s %s\n%s", method, uri, LogSanitizer.sanitizeBody(requestBody)));
+            String.format("%s %s\nHeaders:\n%s\nBody:\n%s", 
+                method, 
+                LogSanitizer.sanitizeUri(uri), 
+                LogSanitizer.sanitizeHeaders(requestHeaders), 
+                LogSanitizer.sanitizeBody(requestBody)));
         
         Response response = filterContext.next(requestSpec, responseSpec);
         
@@ -49,9 +53,12 @@ public class RequestResponseInterceptor implements Filter {
         
         logger.logResponse(statusCode, responseTime, responseHeaders, responseBody);
         
-        // Attach to Allure
+        // Attach sanitized response to Allure
         Allure.addAttachment("Response", "text/plain",
-            String.format("Status: %d\nTime: %dms\n%s", statusCode, responseTime, 
+            String.format("Status: %d\nTime: %dms\nHeaders:\n%s\nBody:\n%s", 
+                statusCode, 
+                responseTime, 
+                LogSanitizer.sanitizeHeaders(responseHeaders), 
                 LogSanitizer.sanitizeBody(responseBody)));
         
         return response;

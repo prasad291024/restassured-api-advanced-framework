@@ -42,7 +42,10 @@ build/
 .env.local
 .env.*
 !.env.example
+*.local.properties
+local.properties
 *.jks
+*.keystore
 *.p12
 *.pem
 *.key
@@ -59,3 +62,8 @@ coverage/
 ### IntelliJ Workspace ###
 .idea/
 !.idea/.gitignore
+
+
+### personal ###
+docs/archive/improvement-notes/
+CLAUDE.md

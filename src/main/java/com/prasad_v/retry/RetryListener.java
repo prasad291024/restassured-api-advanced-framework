@@ -27,6 +27,7 @@ public class RetryListener implements IAnnotationTransformer {
      * @param testMethod The test method
      */
     @Override
+    @SuppressWarnings("rawtypes")
     public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
         boolean retryEnabled = Boolean.parseBoolean(firstNonBlank(
                 ConfigurationManager.getInstance().getConfigProperty("request.retry.enabled", ""),

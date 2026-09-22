@@ -1,11 +1,9 @@
 package com.prasad_v.validation;
 
 import com.prasad_v.exceptions.APIException;
-import com.prasad_v.logging.CustomLogger;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hamcrest.Matchers;
 
 import java.util.List;
 import java.util.Map;

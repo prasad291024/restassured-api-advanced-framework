@@ -15,8 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Manages ExtentTest instances for each test thread to support parallel execution.
@@ -24,7 +22,7 @@ import java.util.Map;
  */
 public class ExtentTestManager {
     private static final CustomLogger logger = LogManager.getLogger(ExtentTestManager.class);
-    private static final Map<Long, ExtentTest> testMap = new HashMap<>();
+    private static final ThreadLocal<ExtentTest> extentTestThread = new ThreadLocal<>();
     private static final ThreadLocal<String> testNameThread = new ThreadLocal<>();
     private static final ExtentReports extent = ExtentReportManager.getInstance();
     private static final String SCREENSHOT_FOLDER = "test-output/screenshots/";
@@ -53,8 +51,8 @@ public class ExtentTestManager {
      *
      * @return The ExtentTest instance
      */
-    public static synchronized ExtentTest getTest() {
-        return testMap.get(Thread.currentThread().getId());
+    public static ExtentTest getTest() {
+        return extentTestThread.get();
     }
 
     /**
@@ -75,7 +73,7 @@ public class ExtentTestManager {
      */
     public static synchronized ExtentTest startTest(String testName, String description) {
         ExtentTest test = extent.createTest(testName, description);
-        testMap.put(Thread.currentThread().getId(), test);
+        extentTestThread.set(test);
         testNameThread.set(testName);
         logger.info("Started test: " + testName);
         return test;
@@ -90,17 +88,17 @@ public class ExtentTestManager {
      */
     public static synchronized ExtentTest createNode(String nodeName, String description) {
         ExtentTest node = getTest().createNode(nodeName, description);
-        testMap.put(Thread.currentThread().getId(), node);
+        extentTestThread.set(node);
         logger.info("Created node: " + nodeName + " under test: " + getTestName());
         return node;
     }
 
     /**
-     * Remove the test from the thread map
+     * Remove the test from the thread context
      */
     public static synchronized void endTest() {
         extent.flush();
-        testMap.remove(Thread.currentThread().getId());
+        extentTestThread.remove();
         testNameThread.remove();
     }
 

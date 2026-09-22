@@ -12,16 +12,17 @@ The framework includes three GitHub Actions workflows for automated testing and 
 - Manual trigger via workflow_dispatch
 
 **Features:**
-- ✅ Matrix strategy: Runs both `testng.xml` and `testng_parallel.xml`
-- ✅ Maven dependency caching
-- ✅ Allure report generation
+- ✅ Automated build & test execution using `testng.xml`
+- ✅ Maven dependency caching via GitHub Actions cache
+- ✅ Automatic Allure report generation and upload
 - ✅ Test result artifacts (30-day retention)
-- ✅ Test summary in PR comments
-- ✅ Separate retry verification job
+- ✅ Automatic GitHub Step Summary in PR comments
+- ✅ Dedicated retry verification job using `testng_retry_check.xml`
+- ✅ Strict quality gate: failures stop the pipeline (no hidden errors)
 
 **Artifacts Generated:**
-- `allure-report-{suite}` - HTML Allure reports
-- `test-results-{suite}` - TestNG/Surefire reports
+- `allure-report` - HTML Allure reports
+- `test-results` - TestNG/Surefire reports and logs
 
 ### 2. Publish Allure Report (`publish-report.yml`)
 **Triggers:**
