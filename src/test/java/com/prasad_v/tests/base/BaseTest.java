@@ -7,7 +7,10 @@ import com.prasad_v.asserts.AssertActions;
 import com.prasad_v.modules.PayloadManager;
 import com.prasad_v.interceptors.RequestResponseInterceptor;
 import com.prasad_v.utils.RestUtils;
+import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.LogConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -46,8 +49,16 @@ public class BaseTest {
 
     public RequestSpecification createRequestSpec() {
         String baseUrl = config.getProperty("api.base.url", APIConstants.BASE_URL);
+        LogConfig logConfig = new LogConfig()
+                .blacklistHeader("Authorization")
+                .blacklistHeader("Cookie")
+                .blacklistHeader("token")
+                .blacklistHeader("X-API-Key");
+        RestAssuredConfig restAssuredConfig = RestAssured.config().logConfig(logConfig);
+
         return new RequestSpecBuilder()
                 .setBaseUri(baseUrl)
+                .setConfig(restAssuredConfig)
                 .addHeader("Content-Type", "application/json")
                 .addFilter(new RequestResponseInterceptor())
                 .build();

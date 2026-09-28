@@ -33,7 +33,7 @@ public class TestE2EFlow_02 extends BaseTest {
         requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
 
         response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
-        validatableResponse = response.then().log().all();
+        validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
         BookingResponse bookingResponse = payloadManager.bookingResponseJava(response.asString());
@@ -58,7 +58,7 @@ public class TestE2EFlow_02 extends BaseTest {
         requestSpecification.basePath(getPath);
 
         response = RestUtils.get(requestSpecification);
-        validatableResponse = response.then().log().all();
+        validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
         Booking booking = payloadManager.getResponseFromJSON(response.asString());
@@ -84,7 +84,7 @@ public class TestE2EFlow_02 extends BaseTest {
         requestSpecification.basePath(deletePath);
 
         response = RestUtils.delete(requestSpecification, token);
-        validatableResponse = response.then().log().all();
+        validatableResponse = response.then();
         validatableResponse.statusCode(201);
     }
 
@@ -102,7 +102,7 @@ public class TestE2EFlow_02 extends BaseTest {
         requestSpecification.basePath(getPath);
 
         response = RestUtils.get(requestSpecification);
-        validatableResponse = response.then().log().all();
+        validatableResponse = response.then();
         validatableResponse.statusCode(404);
     }
 }

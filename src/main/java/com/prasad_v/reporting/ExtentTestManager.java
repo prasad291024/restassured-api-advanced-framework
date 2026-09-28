@@ -10,6 +10,7 @@ import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.prasad_v.logging.CustomLogger;
 import com.prasad_v.logging.LogManager;
+import com.prasad_v.logging.LogSanitizer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -216,28 +217,31 @@ public class ExtentTestManager {
      * @param body The request body
      */
     public static void logRequest(String endpoint, String method, String headers, String body) {
+        String sanitizedHeaders = headers != null ? LogSanitizer.sanitizeHeaders(headers) : null;
+        String sanitizedBody = body != null ? LogSanitizer.sanitizeBody(body) : null;
+
         StringBuilder sb = new StringBuilder();
         sb.append("<details>")
                 .append("<summary><b>API Request Details</b></summary>")
                 .append("<p><b>Endpoint:</b> ").append(endpoint).append("</p>")
                 .append("<p><b>Method:</b> ").append(method).append("</p>");
 
-        if (headers != null && !headers.isEmpty()) {
+        if (sanitizedHeaders != null && !sanitizedHeaders.isEmpty()) {
             sb.append("<p><b>Headers:</b></p>")
-                    .append("<pre>").append(headers).append("</pre>");
+                    .append("<pre>").append(sanitizedHeaders).append("</pre>");
         }
 
-        if (body != null && !body.isEmpty()) {
+        if (sanitizedBody != null && !sanitizedBody.isEmpty()) {
             // Try to format JSON if it appears to be JSON
-            if (body.trim().startsWith("{") || body.trim().startsWith("[")) {
+            if (sanitizedBody.trim().startsWith("{") || sanitizedBody.trim().startsWith("[")) {
                 sb.append("<p><b>Body:</b></p>")
                         .append("<div>");
                 getTest().log(Status.INFO, sb.toString());
-                logJson(body);
+                logJson(sanitizedBody);
                 getTest().log(Status.INFO, "</div></details>");
             } else {
                 sb.append("<p><b>Body:</b></p>")
-                        .append("<pre>").append(body).append("</pre>")
+                        .append("<pre>").append(sanitizedBody).append("</pre>")
                         .append("</details>");
                 getTest().log(Status.INFO, sb.toString());
             }
@@ -258,28 +262,31 @@ public class ExtentTestManager {
      * @param body The response body
      */
     public static void logResponse(int statusCode, long responseTime, String headers, String body) {
+        String sanitizedHeaders = headers != null ? LogSanitizer.sanitizeHeaders(headers) : null;
+        String sanitizedBody = body != null ? LogSanitizer.sanitizeBody(body) : null;
+
         StringBuilder sb = new StringBuilder();
         sb.append("<details>")
                 .append("<summary><b>API Response Details</b></summary>")
                 .append("<p><b>Status Code:</b> ").append(statusCode).append("</p>")
                 .append("<p><b>Response Time:</b> ").append(responseTime).append(" ms</p>");
 
-        if (headers != null && !headers.isEmpty()) {
+        if (sanitizedHeaders != null && !sanitizedHeaders.isEmpty()) {
             sb.append("<p><b>Headers:</b></p>")
-                    .append("<pre>").append(headers).append("</pre>");
+                    .append("<pre>").append(sanitizedHeaders).append("</pre>");
         }
 
-        if (body != null && !body.isEmpty()) {
+        if (sanitizedBody != null && !sanitizedBody.isEmpty()) {
             // Try to format JSON if it appears to be JSON
-            if (body.trim().startsWith("{") || body.trim().startsWith("[")) {
+            if (sanitizedBody.trim().startsWith("{") || sanitizedBody.trim().startsWith("[")) {
                 sb.append("<p><b>Body:</b></p>")
                         .append("<div>");
                 getTest().log(Status.INFO, sb.toString());
-                logJson(body);
+                logJson(sanitizedBody);
                 getTest().log(Status.INFO, "</div></details>");
             } else {
                 sb.append("<p><b>Body:</b></p>")
-                        .append("<pre>").append(body).append("</pre>")
+                        .append("<pre>").append(sanitizedBody).append("</pre>")
                         .append("</details>");
                 getTest().log(Status.INFO, sb.toString());
             }
