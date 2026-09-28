@@ -1,9 +1,7 @@
 package com.prasad_v.tests.crud;
 
-import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.pojos.BookingResponse;
-import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.qameta.allure.TmsLink;
@@ -26,11 +24,8 @@ public class TestCreateBooking extends BaseTest {
     @Description("TC#INT1 - Step 1. Verify that the Booking can be Created") // Brief test description.
     public void testCreateBookingPOST() {
 
-        // Set the base path for the booking creation API
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
-
-        // Send a POST request with booking details in the request body
-        response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
+        // Send a POST request with booking details in the request body via BookingService
+        response = bookingService.createBooking(payloadManager.createPayloadBookingAsString());
 
         // Store the response in a validatable format
         validatableResponse = response.then();
