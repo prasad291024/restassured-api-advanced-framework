@@ -9,10 +9,8 @@ package com.prasad_v.tests.integration;
 */
 
 import com.prasad_v.builders.BookingBuilder;
-import com.prasad_v.constants.APIConstants;
 import com.prasad_v.pojos.Booking;
 import com.prasad_v.tests.base.BaseTest;
-import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.response.Response;
@@ -32,16 +30,14 @@ public class E2ETest_Assignment1 extends BaseTest {
                 .withAdditionalneeds("Breakfast")
                 .build();
 
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
-        Response createResponse = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString(booking));
+        Response createResponse = bookingService.createBooking(payloadManager.createPayloadBookingAsString(booking));
         Assert.assertEquals(createResponse.statusCode(), 200, "Create booking failed");
 
         return createResponse.jsonPath().getInt("bookingid");
     }
 
     public void deleteBooking(int bookingId, String token) {
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId);
-        Response deleteResponse = RestUtils.delete(requestSpecification, token);
+        Response deleteResponse = bookingService.deleteBooking(bookingId, token);
         Assert.assertEquals(deleteResponse.statusCode(), 201, "Delete booking failed");
     }
 
@@ -56,8 +52,7 @@ public class E2ETest_Assignment1 extends BaseTest {
         deleteBooking(bookingId, token);
 
         // Verify the booking is deleted (should return 404)
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId);
-        Response getResponse = RestUtils.get(requestSpecification);
+        Response getResponse = bookingService.getBookingById(bookingId);
         Assert.assertEquals(getResponse.statusCode(), 404, "Deleted booking should return 404");
     }
 }
