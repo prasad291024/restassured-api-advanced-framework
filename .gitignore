@@ -67,3 +67,5 @@ coverage/
 ### personal ###
 docs/archive/improvement-notes/
 CLAUDE.md
+docs/archive
+GEMINI.md
