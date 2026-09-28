@@ -23,7 +23,7 @@ public class TestHealthCheck extends BaseTest {
                 .when()
                 .get();
 
-        validatableResponse = response.then().log().all();
+        validatableResponse = response.then();
 
         // Register custom parser for text/plain responses
         RestAssured.registerParser("text/plain", io.restassured.parsing.Parser.TEXT);

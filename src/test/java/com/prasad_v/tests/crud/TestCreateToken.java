@@ -31,8 +31,8 @@ public class TestCreateToken extends BaseTest {
         // Send a POST request with authentication payload
         response = RestUtils.post(requestSpecification, payloadManager.setAuthPayload());
 
-        // Log the response and store it in a validatable format
-        validatableResponse = response.then().log().all();
+        // Store the response in a validatable format
+        validatableResponse = response.then();
 
         // Validate that the response status code is 200 (Success)
         validatableResponse.statusCode(200);
