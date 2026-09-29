@@ -43,6 +43,7 @@ This document records the comprehensive architectural improvements, security har
   * **`TestCreateBooking` (PR #13)**: Refactored booking creation to route through `bookingService.createBooking(...)` rather than assembling manual REST Assured requests in test methods.
   * **`E2ETest_Assignment1` (PR #14)**: Migrated full create-delete-verify flow to `bookingService.createBooking(...)`, `bookingService.deleteBooking(...)`, and `bookingService.getBookingById(...)`, eliminating legacy `RestUtils` usage.
   * **`E2ETest_Assignment3` (PR #16)**: Migrated create-update-delete-verify flow to `bookingService.createBooking(...)`, `bookingService.updateBooking(...)`, `bookingService.deleteBooking(...)`, and `bookingService.getBookingById(...)`. Eliminated `RestUtils` and manual `requestSpecification.basePath(...)` mutations while activating live test coverage for `BookingService.updateBooking(...)`.
+  * **`E2ETest_Assignment4`**: Migrated create-delete-update negative-flow test to `bookingService.createBooking(...)`, `bookingService.deleteBooking(...)`, and `bookingService.updateBooking(...)`. Eliminated `RestUtils` and manual `requestSpecification.basePath(...)` mutations while validating service-layer behavior on update-after-delete (expecting 405/404).
 * **Fluent Test Data Builder**: Created `BookingBuilder.java` utilizing JavaFaker for dynamic, randomized test data generation, eliminating hardcoded test payloads and preventing data collision during parallel execution.
 * **Refactored PayloadManager**: Integrated `BookingBuilder` into `PayloadManager`, consolidated to a single thread-safe Gson instance, and provided overloaded methods accepting strongly typed POJOs.
 * **Contract & Schema Validation**: Implemented `SchemaValidator.java` supporting automated JSON Schema validation against schema definitions (`booking-schema.json`, `user-schema.json`) stored in `src/test/resources/schemas/`.
@@ -79,7 +80,7 @@ This document records the comprehensive architectural improvements, security har
   * Extended `BaseTest` for uniform lifecycle management.
   * Replaced hardcoded, expired tokens and raw URLs with dynamic authentication and `APIConstants`.
   * Migrated manual JSON strings to `BookingBuilder` and typed POJOs.
-  * Migrated `E2ETest_Assignment1` (PR #14) and `E2ETest_Assignment3` (PR #16) to the clean `BookingService` layer, removing direct REST calls and legacy utilities while maintaining 100% test pass rates across regression and assignment suites.
+  * Migrated `E2ETest_Assignment1` (PR #14), `E2ETest_Assignment3` (PR #16), and `E2ETest_Assignment4` to the clean `BookingService` layer, removing direct REST calls and legacy utilities while maintaining 100% test pass rates across regression and assignment suites.
 * **Parallel Race Condition Resolution**: Fixed `TestE2EFlow_01` and `TestE2EFlow_02`:
   * Namespaced `ITestContext` keys (`flow1_bookingid`, `flow2_bookingid`) and maintained instance state.
   * Added `dependsOnMethods` to guarantee deterministic method sequencing within parallel execution.
@@ -169,11 +170,12 @@ Phase 5: Modernization, Defensive Suite & Log Hardening (Steps 7 & 8)
   ├── Routed TestCreateBooking creation requests through BookingService
   └── Comprehensive technical documentation suite authored in docs/
          │
-Phase 6: Staged Service Layer Migration & Enterprise Modernization (PRs #13 to #16)
+Phase 6: Staged Service Layer Migration & Enterprise Modernization (PRs #13 to #17)
   ├── PR #13: TestCreateBooking migrated to BookingService
   ├── PR #14: E2ETest_Assignment1 migrated to BookingService (Create, Delete, Verify)
   ├── PR #15: Repository hygiene, modernization documentation & tree index maintenance
-  └── PR #16: E2ETest_Assignment3 migrated to BookingService (Create, Update, Delete, Verify)
+  ├── PR #16: E2ETest_Assignment3 migrated to BookingService (Create, Update, Delete, Verify)
+  └── E2ETest_Assignment4 migrated to BookingService (Create, Delete, Try Update)
 ```
 
 ---
@@ -218,6 +220,7 @@ Phase 6: Staged Service Layer Migration & Enterprise Modernization (PRs #13 to #
 | **`testng_E2E.xml` (End-to-End Suite)** | 8 | 8 | 0 | 0 | **100% PASS** |
 | **`testng_E2ETest_Assignment1.xml` (Assignment 1 Suite)** | 1 | 1 | 0 | 0 | **100% PASS** |
 | **`testng_E2ETest_Assignment3.xml` (Assignment 3 Suite)** | 1 | 1 | 0 | 0 | **100% PASS** |
+| **`testng_E2ETest_Assignment4.xml` (Assignment 4 Suite)** | 1 | 1 | 0 | 0 | **100% PASS** |
 | **`SecurityTests` (Defensive Suite)** | 8 | 8 | 0 | 0 | **100% PASS** |
 | **`testng_retry_check.xml` (Retry Suite)** | 1 | 1 | 0 | 0 | **100% PASS** |
 | **Checkstyle Static Analysis** | Comprehensive ruleset | 0 violations | 0 | - | **100% COMPLIANT** |

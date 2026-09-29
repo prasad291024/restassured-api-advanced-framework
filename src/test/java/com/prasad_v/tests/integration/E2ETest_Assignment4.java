@@ -10,10 +10,8 @@ package com.prasad_v.tests.integration;
 */
 
 import com.prasad_v.builders.BookingBuilder;
-import com.prasad_v.constants.APIConstants;
 import com.prasad_v.pojos.Booking;
 import com.prasad_v.tests.base.BaseTest;
-import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.response.Response;
@@ -33,8 +31,7 @@ public class E2ETest_Assignment4 extends BaseTest {
                 .withAdditionalneeds("Martini")
                 .build();
 
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
-        Response createResponse = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString(booking));
+        Response createResponse = bookingService.createBooking(payloadManager.createPayloadBookingAsString(booking));
         Assert.assertEquals(createResponse.statusCode(), 200, "Create booking failed");
 
         return createResponse.jsonPath().getInt("bookingid");
@@ -49,8 +46,7 @@ public class E2ETest_Assignment4 extends BaseTest {
         Assert.assertNotNull(token, "Authentication token should not be null");
 
         // Delete the booking
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId);
-        Response deleteResponse = RestUtils.delete(requestSpecification, token);
+        Response deleteResponse = bookingService.deleteBooking(bookingId, token);
         Assert.assertEquals(deleteResponse.statusCode(), 201, "Delete booking failed");
 
         // Try to update the deleted booking
@@ -64,8 +60,7 @@ public class E2ETest_Assignment4 extends BaseTest {
                 .withAdditionalneeds("Shaken not stirred")
                 .build();
 
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId);
-        Response updateResponse = RestUtils.put(requestSpecification, payloadManager.createPayloadBookingAsString(updateBooking), token);
+        Response updateResponse = bookingService.updateBooking(bookingId, payloadManager.createPayloadBookingAsString(updateBooking), token);
 
         // Restful-booker returns 405 Method Not Allowed when updating a non-existent/deleted resource
         int statusCode = updateResponse.statusCode();
