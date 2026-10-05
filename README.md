@@ -1,7 +1,7 @@
 # API Automation REST Assured Framework (Java)
 
 #### Author: Prasad Valiv
-[![Java](https://img.shields.io/badge/Java-21%20LTS-orange.svg)](https://openjdk.org/)
+[![Java](https://img.shields.io/badge/Java-25%20LTS-orange.svg)](https://openjdk.org/)
 [![REST Assured](https://img.shields.io/badge/REST%20Assured-5.5.5-green.svg)](https://rest-assured.io/)
 [![TestNG](https://img.shields.io/badge/TestNG-7.11.0-blue.svg)](https://testng.org/)
 [![Checkstyle](https://img.shields.io/badge/Checkstyle-0%20Violations-brightgreen.svg)](checkstyle.xml)
@@ -35,7 +35,7 @@ mvnw.cmd test -Dtest=SecurityTests
 
 ## 🛠️ Technology Stack
 
-* **Language**: Java 21 LTS (`--release 21`, verified across JDK 21 LTS & JDK 25 LTS runtimes)
+* **Language**: Java 25 LTS (`--release 25`, verified with JDK 25 LTS)
 * **Core API Client**: REST Assured 5.5.5
 * **Test Runner**: TestNG 7.11.0 (with ThreadLocal parallel execution & `RetryAnalyzer`)
 * **Serialization & Data**: Jackson 2.19.0, Gson 2.12.1, Java Faker 1.0.2, Apache POI 5.4.0

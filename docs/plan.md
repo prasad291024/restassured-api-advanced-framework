@@ -11,7 +11,7 @@ The **REST Assured API Automation Framework** is designed for high-performance, 
 * **Maven Wrapper Standardized**: Cross-platform execution via `mvnw` and `mvnw.cmd`.
 * **Zero-Parameter Default Execution**: Surefire configured with `<suiteXmlFile>testng.xml</suiteXmlFile>` default.
 * **Pragmatic Static Analysis**: Configured `checkstyle.xml` enforcing naming, clean imports, and structural conventions without false-positive package blockers.
-* **Java 22/25 Compatibility**: Handled compiler and runtime bytecode compatibility across contemporary LTS JDKs.
+* **Java 25 LTS Compatibility**: The project targets the Java 25 LTS compiler and runtime.
 
 ### Phase 2: Configuration & Security Hardening (Completed ✅)
 * **Hierarchical Property Resolution**: Prioritized precedence:
