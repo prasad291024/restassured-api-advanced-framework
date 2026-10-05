@@ -62,7 +62,7 @@ This guide provides step-by-step solutions for common issues, error codes, and e
 * **Root Cause**: SpotBugs ASM parser does not yet support Java 25 preview/LTS classfile version 69.
 * **Solution**:
   1. In `pom.xml`, configure SpotBugs with `<failOnError>false</failOnError>`.
-  2. Alternatively, run the build using JDK 21 or JDK 22.
+  2. Alternatively, run the build using JDK 25.
 
 ### 3.2 Checkstyle Package Name Violations
 * **Symptom**: Checkstyle fails with: `Name 'com.prasad_v' must match pattern '^[a-z]+(\.[a-z][a-z0-9]*)*$'`.
@@ -71,9 +71,9 @@ This guide provides step-by-step solutions for common issues, error codes, and e
 
 ### 3.3 Eclipse JDT LS Execution Environment Mismatch & Symbol Resolution
 * **Symptom**: IDE "Problems" tab shows cascade errors (e.g. `AssertActions cannot be resolved`, `BaseTest cannot be resolved`, or `Build path specifies execution environment JavaSE-22`).
-* **Root Cause**: `pom.xml` specified a Java version (e.g. Java 22) that does not match an installed JRE runtime in the workspace, causing Eclipse JDT LS to unbind the execution container.
+* **Root Cause**: `pom.xml` specified a Java version that does not match an installed JRE runtime in the workspace, causing Eclipse JDT LS to unbind the execution container.
 * **Solution**:
-  1. Set `<release>21</release>` in `pom.xml` along with source/target 21.
+  1. Set `<release>25</release>` in `pom.xml` along with source/target 25.
   2. In `.vscode/settings.json`, set `"java.configuration.updateBuildConfiguration": "automatic"` and `"java.compile.nullAnalysis.mode": "disabled"`.
   3. Clean and recompile: `mvnw.cmd clean test-compile`.
 

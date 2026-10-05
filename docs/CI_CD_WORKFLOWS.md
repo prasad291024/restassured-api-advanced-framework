@@ -93,7 +93,7 @@ The framework includes three GitHub Actions workflows for automated testing and 
 
 ### Java Setup
 - **Built-in cache**: Enabled via `cache: maven`
-- **Distribution**: Temurin JDK 22
+- **Distribution**: Temurin JDK 25
 
 ## Test Result Summary
 

@@ -2,7 +2,7 @@
 
 ## 1. Architectural Overview
 
-The framework is a modular, multi-layered API automation testing solution built on Java 21 LTS (`--release 21`), REST Assured, TestNG, and Maven. It is verified across contemporary LTS runtimes (tested with JDK 21 and JDK 25), and follows strict separation of concerns, decoupling test logic from HTTP communication, authentication, configuration, data generation, and reporting.
+The framework is a modular, multi-layered API automation testing solution built on Java 25 LTS (`--release 25`), REST Assured, TestNG, and Maven. It is verified with JDK 25 and follows strict separation of concerns, decoupling test logic from HTTP communication, authentication, configuration, data generation, and reporting.
 
 ```mermaid
 graph TD

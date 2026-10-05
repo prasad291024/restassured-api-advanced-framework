@@ -1,5 +1,5 @@
 # Containerized test execution environment for REST Assured Automation Framework
-FROM eclipse-temurin:22-jdk-alpine
+FROM eclipse-temurin:25-jdk-alpine
 
 WORKDIR /app
 

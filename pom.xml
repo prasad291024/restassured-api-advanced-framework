@@ -12,15 +12,16 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.source>25</maven.compiler.source>
+    <maven.compiler.target>25</maven.compiler.target>
+    <maven.compiler.release>25</maven.compiler.release>
     <suiteXmlFile>testng.xml</suiteXmlFile>
     <rest-assured.version>5.5.5</rest-assured.version>
     <testng.version>7.11.0</testng.version>
-    <jackson.version>2.19.0</jackson.version>
+    <jackson.version>2.21.7</jackson.version>
+    <jackson.annotations.version>2.21</jackson.annotations.version>
     <lombok.version>1.18.38</lombok.version>
-    <assertj.version>3.27.3</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <allure.version>2.29.1</allure.version>
     <log4j.version>2.24.3</log4j.version>
     <apache.poi.version>5.4.0</apache.poi.version>
@@ -119,7 +120,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson.annotations.version}</version>
     </dependency>
 
     <!-- Log4j SLF4J Implementation -->
@@ -196,7 +197,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <release>21</release>
+          <release>25</release>
         </configuration>
       </plugin>
       <plugin>

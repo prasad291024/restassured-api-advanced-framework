@@ -6,7 +6,7 @@ This guide covers all options for running, configuring, and analyzing tests loca
 
 ## 1. Prerequisites
 
-* **Java Development Kit**: JDK 21 LTS standard (`--release 21`). Verified and tested with both JDK 21 LTS and JDK 25 LTS.
+* **Java Development Kit**: JDK 25 LTS standard (`--release 25`). Verified and tested with JDK 25 LTS.
 * **Build Tool**: Maven 3.9+ or use the included Maven Wrapper (`./mvnw` or `mvnw.cmd`).
 * **Allure CLI** (Optional, for local HTML report viewing): `npm install -g allure-commandline` or `scoop install allure`.
 
