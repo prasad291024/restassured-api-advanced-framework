@@ -9,11 +9,9 @@ package com.prasad_v.tests.integration;
  * 5. Delete the Booking using the booking ID.
  */
 
-import com.prasad_v.constants.APIConstants;
 import com.prasad_v.tests.base.BaseTest;
 import com.prasad_v.pojos.Booking;
 import com.prasad_v.pojos.BookingResponse;
-import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import org.testng.ITestContext;
@@ -30,10 +28,7 @@ public class TestE2EFlow_01 extends BaseTest {
     @Owner("Prasad")
     @Description("TC#INT1 - Step 1. Verify that the Booking can be Created")
     public void testCreateBooking(ITestContext iTestContext) {
-        requestSpecification = createRequestSpec();
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
-
-        response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
+        response = bookingService.createBooking(payloadManager.createPayloadBookingAsString());
         validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
@@ -54,11 +49,7 @@ public class TestE2EFlow_01 extends BaseTest {
         }
         assertThat(bookingId).isNotNull();
 
-        requestSpecification = createRequestSpec();
-        String basePathGET = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-        requestSpecification.basePath(basePathGET);
-
-        response = RestUtils.get(requestSpecification);
+        response = bookingService.getBookingById(bookingId);
         validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
@@ -81,11 +72,7 @@ public class TestE2EFlow_01 extends BaseTest {
         }
         iTestContext.setAttribute("flow1_token", token);
 
-        requestSpecification = createRequestSpec();
-        String basePathPUTPATCH = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-        requestSpecification.basePath(basePathPUTPATCH);
-
-        response = RestUtils.put(requestSpecification, payloadManager.fullUpdatePayloadAsString(), token);
+        response = bookingService.updateBooking(bookingId, payloadManager.fullUpdatePayloadAsString(), token);
         validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
@@ -111,11 +98,7 @@ public class TestE2EFlow_01 extends BaseTest {
             }
         }
 
-        requestSpecification = createRequestSpec();
-        String basePathDELETE = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-        requestSpecification.basePath(basePathDELETE);
-
-        response = RestUtils.delete(requestSpecification, token);
+        response = bookingService.deleteBooking(bookingId, token);
         validatableResponse = response.then();
         validatableResponse.statusCode(201);
     }
