@@ -9,10 +9,8 @@ package com.prasad_v.tests.integration;
  */
 
 import com.prasad_v.tests.base.BaseTest;
-import com.prasad_v.constants.APIConstants;
 import com.prasad_v.pojos.Booking;
 import com.prasad_v.pojos.BookingResponse;
-import com.prasad_v.utils.RestUtils;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import org.testng.ITestContext;
@@ -29,10 +27,7 @@ public class TestE2EFlow_02 extends BaseTest {
     @Owner("Prasad")
     @Description("TC#E2E2 - Step 1: Create a booking and store booking ID")
     public void createBooking(ITestContext context) {
-        requestSpecification = createRequestSpec();
-        requestSpecification.basePath(APIConstants.CREATE_UPDATE_BOOKING_URL);
-
-        response = RestUtils.post(requestSpecification, payloadManager.createPayloadBookingAsString());
+        response = bookingService.createBooking(payloadManager.createPayloadBookingAsString());
         validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
@@ -53,11 +48,7 @@ public class TestE2EFlow_02 extends BaseTest {
         }
         assertThat(bookingId).isNotNull();
 
-        requestSpecification = createRequestSpec();
-        String getPath = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-        requestSpecification.basePath(getPath);
-
-        response = RestUtils.get(requestSpecification);
+        response = bookingService.getBookingById(bookingId);
         validatableResponse = response.then();
         validatableResponse.statusCode(200);
 
@@ -79,11 +70,7 @@ public class TestE2EFlow_02 extends BaseTest {
         }
         context.setAttribute("flow2_token", token);
 
-        requestSpecification = createRequestSpec();
-        String deletePath = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-        requestSpecification.basePath(deletePath);
-
-        response = RestUtils.delete(requestSpecification, token);
+        response = bookingService.deleteBooking(bookingId, token);
         validatableResponse = response.then();
         validatableResponse.statusCode(201);
     }
@@ -97,11 +84,7 @@ public class TestE2EFlow_02 extends BaseTest {
         }
         assertThat(bookingId).isNotNull();
 
-        requestSpecification = createRequestSpec();
-        String getPath = APIConstants.CREATE_UPDATE_BOOKING_URL + "/" + bookingId;
-        requestSpecification.basePath(getPath);
-
-        response = RestUtils.get(requestSpecification);
+        response = bookingService.getBookingById(bookingId);
         validatableResponse = response.then();
         validatableResponse.statusCode(404);
     }
